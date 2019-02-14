@@ -30,23 +30,23 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('theme/<int:theme_id>/', views.show_theme, name='show_theme'),
     path('api/make_theme/', views.make_theme, name='make_theme'),
-    path('api/theme/<int:theme_id>/', views.get_theme_info, name='get_theme_info'),
-    path('api/theme/<int:theme_id>/node/', views.get_node_info, name='get_node_info'),
+    path('api/theme/<int:theme_id>/', views.get_theme_info, name='get_theme-info'),
+    path('api/theme/<int:theme_id>/node/', views.get_node_info, name='get_node-info'),
     path('api/theme/<int:theme_id>/theme/edit/', views.edit_theme, name='edit_theme'),
     path('api/theme/<int:theme_id>/node/add/', views.add_node, name='add_node'),
     path('api/theme/<int:theme_id>/node/delete/', views.delete_node, name='delete_node'),
     path('api/theme/<int:theme_id>/node/edit/', views.edit_node, name='edit_node'),
 
     # 関連情報に関するURL
-    path('api/theme/<int:theme_id>/relevant/add/', views.add_relevant_info, name='add_relevant_info'),
-    path('api/theme/<int:theme_id>/relevant/delete/', views.delete_relevant_info, name='delete_relevant_info'),
-    path('api/theme/<int:theme_id>/relevant/edit/', views.edit_relevant_info, name='edit_relevant_info'),
+    path('api/theme/<int:theme_id>/relevant/add/', views.add_relevant_info, name='add_relevant-info'),
+    path('api/theme/<int:theme_id>/relevant/delete/', views.delete_relevant_info, name='delete_relevant-info'),
+    path('api/theme/<int:theme_id>/relevant/edit/', views.edit_relevant_info, name='edit_relevant-info'),
 
-    path('api/relevant/search/', views.search_relevant_info, name='search_relevant_info'),
+    path('api/relevant/search/', views.search_relevant_info, name='search_relevant-info'),
 
     # LODに関するURL(オントロジー・URIに関する情報)
     path('ontology', views.ontology, name='ontology'),
-    path('resource/theme/<int:theme_id>', views.resource_theme_info, name='resource_theme_info'),
-    path('resource/node/<int:node_id>', views.resource_node_info, name='resource_node_info'),
-    path('resource/relevant/<int:relevant_id>', views.resource_relevant_info, name='resource_relevant_info')
+    path('resource/theme/<int:theme_id>', views.resource_theme_info, name='resource_theme-info'),
+    path('resource/node/<int:node_id>', views.resource_node_info, name='resource_node-info'),
+    path('resource/relevant/<int:relevant_id>', views.resource_relevant_info, name='resource_relevant-info')
 ]
