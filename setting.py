@@ -6,7 +6,7 @@ with open('local_settings.json', "w") as fw:
     local_settings = {
         "FILENAME": "local_settings.json",
         "SECRET_KEY": get_random_secret_key(),
-        "ALLOWED_HOSTS": [],
+        "ALLOWED_HOSTS": [""],
         "VIRTUOSO_USER": "",
         "VIRTUOSO_PASSWORD": ""
     }
