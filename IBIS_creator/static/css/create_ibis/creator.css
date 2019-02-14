@@ -1,0 +1,79 @@
+body{
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+/* header start */
+#navvar{
+    margin: 0 0 10px;
+    border-bottom: medium solid orange;
+}
+
+.theme{
+    font-weight: bold;
+}
+/* header end */
+
+#content{
+    margin:  0;
+    padding: 0;
+}
+
+#ibis{
+    display: block;
+    background-color: antiquewhite;
+    margin: 10px 5px 5px;
+    width: calc(100% - 10px);
+    cursor: move;
+}
+
+
+/* ibis start */
+.node {
+    cursor: pointer;
+}
+
+.node > text{
+    cursor: auto;
+}
+
+.link {
+    fill: none;
+    stroke: red;
+    stroke-opacity: 0.6;
+    stroke-width: 1.5px;
+}
+
+/* ibis end */
+
+/* modal start */
+
+#edit-node-description,#add-node-description,#edit-theme-description{
+    height: 8em;
+    line-height: 1.3em;
+}
+
+#relevant-info-details.table, #relevant-info-searches.table{
+    white-space: nowrap;
+    max-height: 12em;
+}
+
+#relevant-info-details{
+    cursor: pointer;
+}
+
+#relevant-info-details td{
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#relevant-info-details.text-justify, #relevant-info-searches.text-justify{
+    color: red;
+}
+
+#relevant-info-details-buttons, #relevant-info-searches-buttons{
+    width: 100%;
+    text-align: right;
+}
+/* modal end */

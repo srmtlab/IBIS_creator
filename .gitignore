@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+local_settings.json
+db.sqlite3
+
+# files about emacs, vim, Mac OS X
+.DS_Store
+*~
+*.swp

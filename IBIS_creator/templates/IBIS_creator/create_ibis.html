@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="{{ theme.theme_description }}">
+    <meta name="keywords" content="白松研究室,LODチャレンジ,IBIS CREATOR,{{ theme.theme_name }}">
+    <meta name="author" content="白松研究室">
+    <title>{{ theme.theme_name }}</title>
+    <link rel="icon" type="image/png" href="{{ base_url }}{% static "img/IBIS_creator_favicon.png"%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ base_url }}{% static "css/create_ibis/creator.css"%}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js" integrity="sha256-va1Vhe+all/yVFhzgwmwBgWMVfLHjXlNJfvsrjUBRgk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/operator.js" %}"></script>
+    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/ibis_visualize.js"%}"></script>
+    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/init.js"%}"></script>
+</head>
+<body>
+
+<!-- navvar start -->
+<header>
+    <nav id="navvar" class="navbar navbar-expand-lg navbar-light">
+        <span class="navbar-brand mb-0 h1 theme">{{ theme.theme_name }}</span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="{{ base_url }}/">IBIS CREATOR<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" onclick="show_edit_theme()" href="#">テーマ編集</a>
+                <a class="nav-item nav-link" href="#">共有</a>
+                <a class="nav-item nav-link" target="_blank" href="http://idea.linkdata.org/idea/idea1s2697i">ヘルプ</a>
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- navvar end -->
+
+<!-- #contents start -->
+<div id="content">
+    <svg id="ibis"></svg>
+</div>
+<!-- #contents end -->
+
+<!-- modal start -->
+<div class="modal fade" id="edit-theme" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">テーマを編集</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="edit-theme-name" class="col-form-label">テーマ名 <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="edit-theme-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-theme-description" class="col-form-label">テーマの説明 <span style="color: red">(必須)</span></label>
+                        <textarea class="form-control" id="edit-theme-description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-success" onclick="edit_theme()">編集</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="delete-node" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">削除確認</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="delete-modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_node(modal_obj)">削除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-node" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">子ノードを追加</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="add-node-name" class="col-form-label">ノード名 <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="add-node-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-node-type" class="col-form-label">ノードタイプ <span style="color: red">(必須)</span></label>
+                        <select class="custom-select" id="add-node-type">
+                            <option value="unselected" selected>選択してください</option>
+                            <option value="Issue">課題</option>
+                            <option value="Idea">アイデア</option>
+                            <option value="Merit">メリット</option>
+                            <option value="Demerit">デメリット</option>
+                            <option value="Example">例示</option>
+                            <option value="Reason">理由</option>
+                            <option value="Opinion">意見</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-node-description" class="col-form-label">ノードの詳細</label>
+                        <textarea class="form-control" id="add-node-description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" onclick="add_node(modal_obj)">追加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-node" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ノードを編集</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_modal_body_form">
+                    <div class="form-group">
+                        <label for="edit-node-name" class="col-form-label">ノード名 <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="edit-node-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-node-type" class="col-form-label">ノードタイプ</label>
+                        <select class="custom-select" id="edit-node-type">
+                            <option value="Issue">課題</option>
+                            <option value="Idea">アイデア</option>
+                            <option value="Merit">メリット</option>
+                            <option value="Demerit">デメリット</option>
+                            <option value="Example">例示</option>
+                            <option value="Reason">理由</option>
+                            <option value="Opinion">意見</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-node-description" class="col-form-label">ノードの詳細</label>
+                        <textarea class="form-control" id="edit-node-description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-success" onclick="edit_node(modal_obj)">更新</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="relevant-info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">関連情報</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" id="relevant-info-details-form">
+                        <label for="relevant-info-details" class="col-form-label">関連情報の編集 (ダブルクリックでリンク先に移動できます)</label>
+                        <div id="relevant-info-details-buttons">
+                            <button type="button" class="btn btn-primary" onclick="show_add_relevant_info(modal_obj)">追加</button>
+                            <button type="button" class="btn btn-danger" onclick="show_delete_relevant_info(relevant_info_index, modal_obj)" disabled>削除</button>
+                            <button type="button" class="btn btn-success" onclick="show_edit_relevant_info(relevant_info_index, modal_obj)" disabled>編集</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group" id="relevant-info-searches-form">
+                        <label for="relevant-info-searches" class="col-form-label">以下の単語でGoogle検索をしてみますか？</label>
+                        <div id="relevant-info-searches-buttons">
+                            <button id="relevant-info-searches-button" type="button" class="btn btn-success" onclick="search_info()">検索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add-relevant-info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">関連情報を追加</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="add-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="add-relevant-info-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="add-relevant-info-url">
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" onclick="add_relevant_info(modal_obj)">追加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-relevant-info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">関連情報を編集</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="edit-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="edit-relevant-info-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
+                        <input type="text" class="form-control" id="edit-relevant-info-url">
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-success" onclick="edit_relevant_info(relevant_info_index, modal_obj)">編集</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-relevant-info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">削除確認</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="delete-relevant-info-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_relevant_info(relevant_info_index, modal_obj)">削除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal end -->
+
+<script type="text/javascript">
+    let theme_id = {{ theme.id }};
+    let base_url = "{{ base_url }}";
+    let static_url = "{{ base_url }}{% static "/" %}";
+</script>
+</body>
+</html>

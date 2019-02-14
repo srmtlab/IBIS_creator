@@ -1,0 +1,123 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dct: <http://purl.org/dc/terms/#> .
+@prefix ibis-ont: <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#> .
+
+<http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#> a owl:Ontology ;
+	dct:title "IBIS ontology" ;
+	dct:description "IBIS Dialogue Vocabulary" ;
+	dct:creator "srmtlab".
+
+ibis-ont:Theme a rdfs:Class;
+	       rdfs:label "Theme";
+	       rdfs:comment "IBIS_creatorのテーマを表すクラス"@ja;
+	       rdfs:subClassOf rdfs:Resource;
+	       rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+# class definition start
+ibis-ont:Node a rdfs:Class;
+	      rdfs:label "Node";
+	      rdfs:comment "このクラスはIBISノードの基礎クラスです"@ja;
+	      rdfs:subClassOf rdfs:Resource;
+	      rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Issue a rdfs:Class;
+	       rdfs:label "Issue";
+	       rdfs:comment "このクラスはIssue nodeのクラスです"@ja;
+	       rdfs:subClassOf ibis-ont:Node;
+	       rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Idea a rdfs:Class;
+	      rdfs:label "Idea";
+	      rdfs:comment "このクラスはIdea nodeのクラスです"@ja;
+	      rdfs:subClassOf ibis-ont:Node;
+	      rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Argument a rdfs:Class;
+		  rdfs:label "Argument";
+		  rdfs:comment "このクラスはArgument nodeのクラスです"@ja;
+		  rdfs:subClassOf ibis-ont:Node;
+		  rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Merit a rdfs:Class;
+	       rdfs:label "Merit";
+	       rdfs:comment "このクラスはMerit nodeのクラスです"@ja;
+	       rdfs:subClassOf ibis-ont:Argument;
+	       rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Demerit a rdfs:Class;
+		 rdfs:label "Demerit";
+		 rdfs:comment "このクラスはDemerit nodeのクラスです"@ja;
+		 rdfs:subClassOf ibis-ont:Argument;
+		 rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Example a rdfs:Class;
+		 rdfs:label "Example";
+		 rdfs:comment "このクラスはExample nodeのクラスです"@ja;
+		 rdfs:subClassOf ibis-ont:Argument;
+		 rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Reason a rdfs:Class;
+		rdfs:label "Reason";
+		rdfs:comment "このクラスはReason nodeのクラスです"@ja;
+		rdfs:subClassOf ibis-ont:Argument;
+		rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:Opinion a rdfs:Class;
+		 rdfs:label "Opinion";
+		 rdfs:comment "このクラスはOpinion nodeのクラスです"@ja;
+		 rdfs:subClassOf ibis-ont:Argument;
+		 rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:RelevantInfo a rdfs:Class;
+		      rdfs:label "RelevantInfo";
+		      rdfs:comment "これは関連情報を表すクラスです"@ja;
+		      rdfs:subClassOf rdfs:Resource;
+		      rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+# class definition end
+
+# property definition start
+ibis-ont:rootNode a rdf:Property ;
+		    rdfs:label "rootNode";
+		    rdfs:comment "This property is used to point at rootNode in the Theme";
+		    rdfs:domain ibis-ont:Theme;
+		    rdfs:range ibis-ont:Node;
+		    rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:theme a rdf:Property ;
+		    rdfs:label "theme";
+		    rdfs:comment "This property is used to denote Theme of a node";
+		    rdfs:domain ibis-ont:Node;
+		    rdfs:range ibis-ont:Theme;
+		    rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:node a rdf:Property ;
+		    rdfs:label "node";
+		    rdfs:comment "This property is used to denote node of a RelevantInfo";
+		    rdfs:domain ibis-ont:RelevantInfo;
+		    rdfs:range ibis-ont:Node;
+		    rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:relevant a rdf:Property ;
+		  rdfs:label "relevant";
+		  rdfs:comment "This property is used to denote informations related to IBIS node";
+		  rdfs:domain ibis-ont:Node;
+		  rdfs:range ibis-ont:RelevantInfo;
+		  rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+
+ibis-ont:responseOf a rdf:Property ;
+		    rdfs:label "responseOf";
+		    rdfs:comment "This property is used to denote IBIS node that responds to the other IBIS node";
+		    rdfs:domain ibis-ont:Node;
+		    rdfs:range ibis-ont:Node;
+		    rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+		  
+
+ibis-ont:relatedURL a rdf:Property ;
+		    rdfs:label "relatedURL";
+		    rdfs:comment "This property is used to denote URL";
+		    rdfs:domain ibis-ont:RelevantInfo;
+		    rdfs:isDefinedBy <http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#>.
+# property definition end
