@@ -27,10 +27,10 @@ python3 manage.py makemigrations IBIS_creator --settings config.settings.product
 python3 manage.py migrate --settings config.settings.production
 ```
 
-Open `local_settings.json` and add  element  in "ALLOWED_HOSTS", "VIRTUOSO_USER", "VIRTUOSO_PASSWORD"  
+Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"  
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve  
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store   
-- "VIRTUOSO_PASSWORD" : password which "VIRTUOSO_USER" has
+- "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER" 
 
 ## run the app
 ```bash
