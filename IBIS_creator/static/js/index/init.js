@@ -43,7 +43,6 @@ function create_theme() {
 
     document.createTheme.action = base_url + "/api/make_theme/";
     document.createTheme.submit();
-    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/make_theme/",
@@ -59,7 +58,6 @@ function create_theme() {
         // if data sending is failed
         alert("テーマの作成に失敗しました");
     });
-    */
 
     $('#create_theme_modal').modal('hide');
 }

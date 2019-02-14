@@ -66,30 +66,6 @@ let zoom = function() {
         + ") scale(" + scale + ")");
 };
 
-function connect(WebSocketUrl) {
-    if(connection == null){
-        connection = new WebSocket(WebSocketUrl);
-
-        connection.onopen = function (event) {
-            console.log( "connecting to " + WebSocketUrl)
-        };
-
-        connection.onclose = function (event) {
-            console.log("close WebSocket connection " + event.code);
-            connection = null;
-            connect(WebSocketUrl);
-            setTimeout(connect, 3000);
-        };
-
-        connection.onerror = function (error) {
-            console.log("Error : " + error);
-            alert("エラーが発生しました\nリロードしてください")
-        };
-
-        connection.onmessage = onMessage;
-    }
-}
-
 function load_data(node_url,theme_url) {
     // this function gets conversation data from server
     let ibis = $("#ibis");
