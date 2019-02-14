@@ -51,9 +51,6 @@ function create_theme() {
                 'name' : document.getElementById("create-theme-name").value,
                 'description' : document.getElementById("create-theme-description").value
             },
-    }).done(function(theme_id){
-        // if data sending is successful
-        window.open(base_url + "/theme/" + theme_id + "/");
     }).fail(function(data){
         // if data sending is failed
         alert("テーマの作成に失敗しました");

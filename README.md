@@ -21,7 +21,7 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
 pip install -r requirements/production.txt
-python3 setting.py
+python3 SetUp.py
 python3 manage.py migrate --settings config.settings.production
 python3 manage.py makemigrations IBIS_creator --settings config.settings.production
 python3 manage.py migrate --settings config.settings.production
@@ -43,7 +43,7 @@ $ python3 manage.py runserver --settings config.settings.production
 git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
 pip install -r requirements/local.txt
-python3 setting.py
+python3 SetUp.py
 ```
 Open `local_settings.json` and add `local_host` and `127.0.0.1` in "ALLOWED_HOSTS"
 ```json

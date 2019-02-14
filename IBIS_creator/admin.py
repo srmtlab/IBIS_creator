@@ -61,8 +61,7 @@ class RelevantInfoDisplay(admin.ModelAdmin):
     list_display = ("relevant_url", "node")
 
 
-# download_json.short_description = "download IBIS json file"
-# admin.site.register(JsonCache, JsonDownload)
+download_json.short_description = "download IBIS json files"
 admin.site.register(Theme, ThemeDisplay)
 admin.site.register(Node, NodeDisplay)
 admin.site.register(RelevantInfo, RelevantInfoDisplay)
