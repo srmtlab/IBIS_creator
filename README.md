@@ -27,10 +27,10 @@ python3 manage.py makemigrations IBIS_creator --settings config.settings.product
 python3 manage.py migrate --settings config.settings.production
 ```
 
-Open `local_settings.json` and add  element  in "ALLOWED_HOSTS", "VIRTUOSO_USER", "VIRTUOSO_PASSWORD"
-    - "ALLOWED_HOSTS" <- the host/domain names that IBIS CREATOR can serve in "ALLOWED_HOSTS"
-    - "VIRTUOSO_USER" <- Virtuoso user
-    - "VIRTUOSO_PASSWORD" <- Virtuoso password
+Open `local_settings.json` and add  element  in "ALLOWED_HOSTS", "VIRTUOSO_USER", "VIRTUOSO_PASSWORD"  
+    - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve in "ALLOWED_HOSTS"  
+    - "VIRTUOSO_USER" : Virtuoso user  
+    - "VIRTUOSO_PASSWORD" : Virtuoso password  
 
 ## run the app
 ```bash
