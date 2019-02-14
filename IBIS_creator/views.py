@@ -5,7 +5,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
-
 from .models import Theme
 from .models import Node
 from .models import RelevantInfo
