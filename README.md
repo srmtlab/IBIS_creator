@@ -1,6 +1,6 @@
 IBIS CREATOR
 ===
-IBIS CREATOR is to make the IBIS ( Issue-based information system ) structure
+IBIS CREATOR is to make the IBIS ( Issue-based information system ) structure  
 This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 
 # Dependency
@@ -16,7 +16,7 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 # Setup
 ## Build the app
 ```bash
-git clone
+git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
 pip install -r requirements/production.txt
 python3 setting.py
@@ -38,7 +38,7 @@ $ python3 manage.py runserver --settings config.settings.production
 # For Developer
 ## Build the app
 ```bash
-git clone
+git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
 pip install -r requirements/local.txt
 python3 setting.py
