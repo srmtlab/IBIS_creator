@@ -2,3 +2,4 @@ Django
 mecab-python3
 requests
 channels
+channels_redis

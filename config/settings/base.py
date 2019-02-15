@@ -46,13 +46,14 @@ VIRTUOSO_PASSWORD = get_secret("VIRTUOSO_PASSWORD")
 # Application definition
 
 INSTALLED_APPS = [
-    'IBIS_creator.apps.IbisCreatorConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'IBIS_creator.apps.IbisCreatorConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+ASGI_APPLICATION = 'config.settings.routing.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -123,3 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# use Redis as channel layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
