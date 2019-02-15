@@ -124,7 +124,6 @@ class Virtuoso:
                            + "where{ ?s ?q <" + self.relevant_pref + str(relevant_index) + ">.}"
         self.query()
 
-
     def updateRelevantInfo(self, relevant):
         node_url = "<" + self.node_pref + str(relevant.node.id) + ">"
         relevant_url = "<" + self.relevant_pref + str(relevant.id) + ">"

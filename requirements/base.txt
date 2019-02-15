@@ -1,3 +1,4 @@
-Django==2.1.7
-mecab-python3==0.7
-requests==2.19.1
+Django
+mecab-python3
+requests
+channels

@@ -260,9 +260,9 @@ def resource_theme_info(request, theme_id):
         theme_obj = theme_queryset[0]
 
         theme_json = '{ "id" : ' + str(theme_obj.id) \
-                    + ' , "name" : "' + theme_obj.theme_name \
-                    + '" , "description" : "' + theme_obj.theme_description \
-                    + '" }'
+                     + ' , "name" : "' + theme_obj.theme_name \
+                     + '" , "description" : "' + theme_obj.theme_description \
+                     + '" }'
 
         return HttpResponse(theme_json, content_type="application/json")
     else:
