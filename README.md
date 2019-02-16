@@ -14,6 +14,7 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
     - django-debug-toolbar (for development)
 - Virtuoso
     - IBIS CREATOR uses Virtuoso as RDF store
+- Redis
 
 # Setup
 ## Build the app
@@ -45,10 +46,10 @@ cd IBIS_creator
 pip install -r requirements/local.txt
 python3 SetUp.py
 ```
-Open `local_settings.json` and add `local_host` and `127.0.0.1` in "ALLOWED_HOSTS"
+Open `local_settings.json` and add `localhost` and `127.0.0.1` in "ALLOWED_HOSTS"
 ```json
 # example
-"ALLOWED_HOSTS": ["local_host","127.0.0.1"]
+"ALLOWED_HOSTS": ["localhost","127.0.0.1"]
 ```
 
 ## migrate database

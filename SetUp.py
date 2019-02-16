@@ -8,6 +8,8 @@ with open('local_settings.json', "w") as fw:
         "SECRET_KEY": get_random_secret_key(),
         "ALLOWED_HOSTS": [""],
         "VIRTUOSO_USER": "",
-        "VIRTUOSO_PASSWORD": ""
+        "VIRTUOSO_PASSWORD": "",
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": 6379
     }
     json.dump(local_settings, fw, indent=2)

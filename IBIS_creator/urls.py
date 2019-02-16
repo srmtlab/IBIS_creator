@@ -15,9 +15,6 @@ GETリクエスト
     ontology : ontology定義ファイル
     resource/{theme,node,relevant}/ : テーマ，ノード，関連情報に関するリソース情報
 
-
-WebSocketリクエスト
-    ws/theme/{theme_id}/ : WebSocketを用いた，ノード・テーマ・関連情報の編集(追加・削除・編集)
 """
 
 urlpatterns = [

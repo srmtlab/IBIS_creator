@@ -125,12 +125,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+REDIS_HOST = get_secret("REDIS_HOST")
+REDIS_PORT = get_secret("REDIS_PORT")
+
 # use Redis as channel layer
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'BACKEND': '',
         'CONFIG': {
-            "hosts": [('localhost', 6379)],
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
         },
     },
 }
