@@ -141,31 +141,3 @@ def resource_relevant_info(request, relevant_id):
         return HttpResponse(relevant_json, content_type="application/json")
     else:
         return HttpResponse(False)
-
-
-def make_json(parent_node, json_data):
-    json_data["id"] = parent_node.id
-    json_data["name"] = parent_node.node_name
-    json_data["type"] = parent_node.node_type
-    json_data["description"] = parent_node.node_description
-    json_data["relevant"] = []
-    json_data["children"] = []
-
-    relevant_info_list = RelevantInfo.objects.filter(node=parent_node)
-    for relevant_info in relevant_info_list:
-        relevant = {
-            "id": relevant_info.id,
-            "url": relevant_info.relevant_url,
-            "title": relevant_info.relevant_title
-        }
-        json_data["relevant"].append(relevant)
-
-    node_relevant_list = NodeNode.objects.filter(parent_node=parent_node)
-    for nodenode in node_relevant_list:
-        child_node = {}
-        json_data["children"].append(child_node)
-        make_json(nodenode.child_node, child_node)
-
-
-def edit_ibis(request, relevant_id):
-    theme_id = relevant_id
