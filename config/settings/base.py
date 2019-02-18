@@ -40,8 +40,6 @@ SECRET_KEY = get_secret("SECRET_KEY")
 
 ALLOWED_HOSTS = get_secret("ALLOWED_HOSTS")
 
-VIRTUOSO_USER = get_secret("VIRTUOSO_USER")
-VIRTUOSO_PASSWORD = get_secret("VIRTUOSO_PASSWORD")
 
 # Application definition
 
@@ -137,3 +135,14 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# below program about LOD settings
+
+VIRTUOSO_USER = get_secret("VIRTUOSO_USER")
+VIRTUOSO_PASSWORD = get_secret("VIRTUOSO_PASSWORD")
+
+
+LOD_RESOURCE = get_secret("LOD_RESOURCE")
+LOD_GRAPH_URI = get_secret("LOD_GRAPH_URI")
+ONTOLOGY = get_secret("ONTOLOGY")
+VIRTUOSO_UPDATE_ENDPOINT = get_secret("VIRTUOSO_UPDATE_ENDPOINT")

@@ -66,13 +66,71 @@ let zoom = function() {
         + ") scale(" + scale + ")");
 };
 
-function load_data(node_url,theme_url) {
+function init_data(websocket_url) {
     // this function gets conversation data from server
     let ibis = $("#ibis");
     ibis_width = ibis.width();
     ibis_height = ibis.height();
     navvar_height = $("#navvar").outerHeight(true);
 
+    connection = new WebSocket(websocket_url);
+
+    connection.onopen = function(e) {
+        connection.send(JSON.stringify({
+            'status': 'init'
+        }));
+    };
+
+    connection.onmessage =function (e) {
+        let data = JSON.parse(e.data);
+        let status = data["status"];
+        if(status === "init"){
+
+        }else if (status === "work"){
+            let type = data["type"];
+            let operation = data["operation"];
+            let data = data["data"];
+
+            if(type==="node")
+            {
+                if(operation==="add")
+                {
+
+                }
+                else if(operation==="delete")
+                {
+
+                }
+                else if(operation==="edit")
+                {
+
+                }
+            }
+            else if(type==="theme")
+            {
+                if(operation==="edit")
+                {
+
+                }
+            }
+            else if(type==="relevant_info")
+            {
+                if(operation==="add")
+                {
+
+                }
+                else if(operation==="delete")
+                {
+
+                }
+                else if(operation==="edit")
+                {
+
+                }
+            }
+        }
+    }
+    /*
     let load_flag = true;
     $.ajax({
         type: 'GET',
@@ -124,6 +182,7 @@ function load_data(node_url,theme_url) {
     if(!load_flag){
         alert("読み込みエラー\nリロードしてください");
     }
+    */
 }
 
 function tr_default(tblID){
@@ -142,10 +201,13 @@ window.addEventListener("resize", resize_ibis);
 window.onload = function () {
     resize_ibis();
 
-    let theme_url = base_url + "/api/theme/" + theme_id + "/";
-    let node_url = base_url + "/api/theme/" + theme_id + "/node/";
+    //let theme_url = base_url + "/api/theme/" + theme_id + "/";
+    //let node_url = base_url + "/api/theme/" + theme_id + "/node/";
+    let websocket_url = "ws://" + location.host + base_url + "/ws/theme/" + theme_id + "/";
 
-    load_data(node_url, theme_url);
+    init_data(websocket_url);
+
+
     $("#add-node").on('hidden.bs.modal', function () {
         document.getElementById("add-node-name").value = "";
         document.getElementById("add-node-type").value = "unselected";

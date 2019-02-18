@@ -7,6 +7,7 @@ from .models import NodeNode
 from .models import RelevantInfo
 from .virtuoso import Virtuoso
 
+
 class IBISConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.theme_id = self.scope['url_route']['kwargs']['theme_id']
@@ -39,6 +40,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
                             theme=theme_obj)
             node_obj.save()
             NodeNode(parent_node=Node.objects.filter(pk=parent_id)[0], child_node=node_obj).save()
+            data["node_id"] = node_obj.id
             Virtuoso().addNode(node_obj, parent_id)
             return True
 
@@ -97,6 +99,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
                                                  relevant_title=relevant_title,
                                                  node=node_obj)
                 relevant_info_obj.save()
+                data["relevant_id"] = relevant_info_obj.id
                 Virtuoso().addRelevantInfo(relevant_info_obj)
                 return True
             else:
@@ -212,11 +215,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
             }
             # Send message to WebSocket
             await self.send(text_data=json.dumps(init_data))
-        else:
-            await self.send(text_data=json.dumps({
-                'status': 'error',
-                'message': 'designated theme is not found'
-            }))
 
     # Receive message from room group
     async def ibis_edit(self, event):
@@ -228,8 +226,3 @@ class IBISConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         if save_flag:
             await self.send(text_data=json.dumps(event['send_data']))
-        else:
-            await self.send(text_data=json.dumps({
-                'status': 'error',
-                'message': 'database error'
-            }))

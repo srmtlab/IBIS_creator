@@ -1,3 +1,12 @@
+function data_formatting(status, type, operation, data) {
+    return {
+        "status" : status,
+        "type" : type,
+        "operation" : operation,
+        "data" : data
+    }
+}
+
 /* start edit theme */
 function show_edit_theme() {
     document.getElementById("edit-theme-name").value = theme_obj["name"];
@@ -78,6 +87,18 @@ function add_node(d) {
     let node_type = document.getElementById("add-node-type").value;
     let node_description = document.getElementById("add-node-description").value;
 
+    $('#add-node').modal('hide');
+
+    let json_data = {
+        'node_name' : node_name,
+        'node_type' : node_type,
+        "node_description": node_description,
+        'parent_id' : d.data.id
+    };
+    let add_data = data_formatting("work","node","add",json_data);
+    connection.send(JSON.stringify(add_data));
+
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/node/add/",
@@ -125,8 +146,8 @@ function add_node(d) {
         // if data sending is failed
         alert("追加エラー\nリロードしてください");
     });
+    */
 
-    $('#add-node').modal('hide');
 }
 /* end add node */
 

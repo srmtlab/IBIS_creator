@@ -27,9 +27,9 @@ body{
 }
 
 .jumbotron-fixed h1{
-    font-size: 30px;
     text-align: center;
     color: white;
+    font-size: 30px;
 }
 
 .jumbotron-fixed .container{
@@ -56,7 +56,7 @@ body{
 }
 
 
-.col-lg-4 h5{
+.theme_name{
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -65,34 +65,26 @@ body{
     height: 1.3em;
 }
 
-.col-lg-4 a{
+.edit_button{
     margin: 0 auto;
     width: 30%;
     display: block;
 }
 
-.col-lg-4 .pane{
+.pane{
     width: 90%;
     border: 1px solid black;
     border-radius: 10px;
     margin: 0 auto 1em;
     padding: 1em;
 }
-/*
-.col-lg-4-fixed{
-    border: 2px solid black;
-    border-radius: 10px;
-    padding: 1em;
-    margin: 0 16px 15px;
-}
-*/
 
 #create-theme-description{
     height: 8em;
     line-height: 1.3em;
 }
 
-@media screen and (max-width:990px) {
+@media screen and (max-width:992px) {
     .nav-fixed a, .navbar-fixed span{
         padding-left: 15px;
     }
@@ -100,7 +92,7 @@ body{
         width: 90%;
         margin: 0 auto;
     }
-    .col-lg-4 a{
+    .edit_button{
         width: 20%;
     }
 }

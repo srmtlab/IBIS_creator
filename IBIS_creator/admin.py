@@ -7,7 +7,7 @@ from .models import Theme
 from .models import Node
 from .models import RelevantInfo
 from .models import NodeNode
-from .views import make_json
+# from .views import make_json
 
 
 admin.site.site_title = 'IBIS CREATOR admin'
@@ -15,6 +15,7 @@ admin.site.site_header = 'IBIS CREATOR データ管理'
 admin.site.index_title = 'データ管理'
 
 
+"""
 def download_json(modeladmin, request, queryset):
     memory_file = BytesIO()
     zip_file = zipfile.ZipFile(memory_file, 'w')
@@ -42,11 +43,11 @@ def download_json(modeladmin, request, queryset):
     response = HttpResponse(memory_file.getvalue(), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename=IBIS_json.zip'
     return response
-
+"""
 
 class ThemeDisplay(admin.ModelAdmin):
     list_display = ("theme_name", "theme_description", "id")
-    actions = [download_json]
+    # actions = [download_json]
 
 
 class NodeDisplay(admin.ModelAdmin):
@@ -61,7 +62,7 @@ class RelevantInfoDisplay(admin.ModelAdmin):
     list_display = ("relevant_url", "node")
 
 
-download_json.short_description = "download IBIS json files"
+# download_json.short_description = "download IBIS json files"
 admin.site.register(Theme, ThemeDisplay)
 admin.site.register(Node, NodeDisplay)
 admin.site.register(RelevantInfo, RelevantInfoDisplay)
