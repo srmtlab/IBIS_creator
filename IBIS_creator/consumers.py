@@ -1,5 +1,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+from .models import Theme
+from .models import Node
+from .models import NodeNode
 
 
 class IBISConsumer(AsyncWebsocketConsumer):
@@ -16,9 +20,13 @@ class IBISConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+        await self.send(text_data=json.dumps(self._make_initial_data(self.room_name)))
+
+
+    async def _make_initial_data(self, theme_id):
+        json_data = {}
+
+        return json_data
 
 
     async def disconnect(self, close_code):
