@@ -28,7 +28,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    @database_sync_to_async
     async def renew_node_database(self, data_operation, data):
         if data_operation == "add":
             node_name = data["node_name"]
@@ -74,7 +73,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
             else:
                 return False
 
-    @database_sync_to_async
     async def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
             theme_obj = Theme.objects.filter(pk=self.theme_id)[0]
@@ -86,7 +84,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
         else:
             return False
 
-    @database_sync_to_async
     async def renew_relevant_info_database(self, data_operation, data):
         if data_operation == "add":
             node_id = int(data["node_id"])
@@ -149,7 +146,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 self.theme_name,
                 {
-                    'type': 'ibis_init'
+                    'type': 'ibis_init',
                 }
             )
         elif status == "work":
@@ -170,7 +167,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-    @database_sync_to_async
     async def make_json(self, parent_node, json_data):
         json_data["id"] = parent_node.id
         json_data["name"] = parent_node.node_name
@@ -195,7 +191,6 @@ class IBISConsumer(AsyncWebsocketConsumer):
             await self.make_json(nodenode.child_node, child_node)
 
     # Receive message from room group
-    @database_sync_to_async
     async def ibis_init(self, event):
         theme_queryset = Theme.objects.filter(pk=self.theme_id)
 

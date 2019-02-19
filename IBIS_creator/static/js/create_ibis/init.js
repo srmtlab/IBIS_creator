@@ -82,12 +82,13 @@ function init_data(websocket_url) {
     };
 
     connection.onmessage =function (e) {
-        let data = JSON.parse(e.data);
-        let status = data["status"];
-        if(init_flag && status === "init"){
-            theme_obj = data["theme"];
+        let receive_data = JSON.parse(e.data);
+        let status = receive_data["status"];
 
-            let ibisData = data['node'];
+        if(init_flag && status === "init"){
+            theme_obj = receive_data["theme"];
+
+            let ibisData = receive_data['node'];
 
             //Constructs a root node from the hierarchical data "ibisData"
             root = d3.hierarchy(ibisData);
@@ -104,9 +105,10 @@ function init_data(websocket_url) {
 
             update(root);
         }else if (status === "work"){
-            let type = data["type"];
-            let operation = data["operation"];
-            let data = data["data"];
+
+            let type = receive_data["type"];
+            let operation = receive_data["operation"];
+            let data = receive_data["data"];
 
             if(type === "theme")
             {
