@@ -85,8 +85,24 @@ function init_data(websocket_url) {
         let data = JSON.parse(e.data);
         let status = data["status"];
         if(init_flag && status === "init"){
-            theme_obj["name"] = data["theme"]["name"];
-            theme_obj["description"] = data["theme"]["description"];
+            theme_obj = data["theme"];
+
+            let ibisData = data['node'];
+
+            //Constructs a root node from the hierarchical data "ibisData"
+            root = d3.hierarchy(ibisData);
+
+            g = d3.select("#ibis").append("g");
+
+            d3.select("#ibis")
+                .call(
+                    d3.zoom()
+                        .scaleExtent([1 / 8, 12])
+                        .on("zoom", zoom)
+                )
+                .on("dblclick.zoom", null);
+
+            update(root);
         }else if (status === "work"){
             let type = data["type"];
             let operation = data["operation"];
@@ -107,26 +123,26 @@ function init_data(websocket_url) {
                 }
                 else if(operation === "delete")
                 {
-
+                    delete_node(data)
                 }
                 else if(operation === "edit")
                 {
-
+                    edit_node(data)
                 }
             }
             else if(type === "relevant_info")
             {
                 if(operation === "add")
                 {
-
+                    add_relevant_info(data)
                 }
                 else if(operation === "delete")
                 {
-
+                    delete_relevant_info(data)
                 }
                 else if(operation === "edit")
                 {
-
+                    edit_relevant_info(data)
                 }
             }
         }

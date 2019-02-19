@@ -91,59 +91,23 @@ function send_add_node(d) {
     connection.send(JSON.stringify(add_data));
 
     $('#add-node').modal('hide');
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/node/add/",
-        data:
-            {
-                'node_name' : node_name,
-                'node_type' : node_type,
-                "node_description": node_description,
-                'parent_id' : d.data.id
-            }
-    }).done(function(node_id){
-        // if data sending is successful
-
-        let node =
-            d3.hierarchy(
-                {
-                    'id' : node_id,
-                    'name' : node_name,
-                    'type' : node_type,
-                    "description": node_description,
-                    'relevant' : {},
-                    'children' : []
-                }
-            );
-
-        node.parent = d;
-        node.children = undefined;
-        node.depth = d.depth + 1;
-
-        if(d.children !== undefined || d._children !== undefined){
-            //if d already has child node
-            if(d._children !== undefined){
-                d.children = d._children;
-                d._children = undefined;
-            }
-        }else {
-            //if d still hasn't child node
-            d.children= [];
-        }
-        d.children.push(node);
-        d.data.children.push(node.data);
-        update(d, true);
-
-    }).fail(function(){
-        // if data sending is failed
-        alert("追加エラー\nリロードしてください");
-    });
-    */
-
+    modal_obj = undefined;
 }
 
 function add_node(data) {
+
+    let parent_node = null;
+    let node_list = root.descendants();
+
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["parent_id"]){
+                parent_node = node_list[i];
+                break;
+            }
+        }
+    }
+
     let node =
         d3.hierarchy(
             {
@@ -156,23 +120,23 @@ function add_node(data) {
             }
         );
 
-    node.parent = d;
+    node.parent = parent_node;
     node.children = undefined;
-    node.depth = d.depth + 1;
+    node.depth = parent_node.depth + 1;
 
-    if(d.children !== undefined || d._children !== undefined){
+    if(parent_node.children !== undefined || parent_node._children !== undefined){
         //if d already has child node
-        if(d._children !== undefined){
-            d.children = d._children;
-            d._children = undefined;
+        if(parent_node._children !== undefined){
+            parent_node.children = parent_node._children;
+            parent_node._children = undefined;
         }
     }else {
         //if d still hasn't child node
-        d.children= [];
+        parent_node.children= [];
     }
-    d.children.push(node);
-    d.data.children.push(node.data);
-    update(d, true);
+    parent_node.children.push(node);
+    parent_node.data.children.push(node.data);
+    update(parent_node, true);
 }
 /* end add node */
 
@@ -209,32 +173,32 @@ function send_delete_node(d) {
         };
         let delete_data = data_formatting("work","node","delte",json_data);
         connection.send(JSON.stringify(delete_data))
-        /*
-        $.ajax({
-            type: 'POST',
-            url: base_url + "/api/theme/" + theme_id + "/node/delete/",
-            data:
-                {
-                    'node_id' : d.data.id
-                }
-        }).done(function(){
-            // if data sending is successful
-            let parent = d.parent;
-            let array_num = d.parent.children.indexOf(d);
-            parent.children.splice(array_num,1);
-            parent.data.children.splice(array_num,1);
-            if(parent.children.length === 0){
-                parent.children = undefined;
-                parent._children  = undefined;
-            }
-            update(d,true);
-        }).fail(function(){
-            // if data sending is failed
-            alert("削除エラー\nリロードしてください");
-        });
-        */
     }
     modal_obj = undefined;
+}
+function delete_node(data) {
+
+    let delete_node = null;
+    let node_list = root.descendants();
+
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["node_id"]){
+                delete_node = node_list[i];
+                break;
+            }
+        }
+    }
+
+    let parent = delete_node.parent;
+    let array_num = delete_node.parent.children.indexOf(delete_node);
+    parent.children.splice(array_num,1);
+    parent.data.children.splice(array_num,1);
+    if(parent.children.length === 0){
+        parent.children = undefined;
+        parent._children  = undefined;
+    }
+    update(delete_node,true);
 }
 /* end delete node */
 
@@ -286,29 +250,25 @@ function send_edit_node(d) {
     connection.send(JSON.stringify(edit_data));
 
     $('#edit-node').modal('hide');
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/node/edit/",
-        data:
-            {
-                'node_id' : d.data.id,
-                'node_name' : node_name,
-                'node_type' : node_type,
-                "node_description": node_description
-            }
-    }).done(function(){
-        // if data sending is successful
-        d.data.name = node_name;
-        d.data.type =node_type;
-        d.data.description = node_description;
-        update(d, true);
-    }).fail(function(){
-        // if data sending is failed
-        alert("編集エラー\nリロードしてください");
-    });
-    */
+    modal_obj = undefined;
+}
+function edit_node(data) {
+    let edit_node = null;
+    let node_list = root.descendants();
 
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["node_id"]){
+                edit_node = node_list[i];
+                break;
+            }
+        }
+    }
+
+    edit_node.data.name = data["node_name"];
+    edit_node.data.type = data["node_type"];
+    edit_node.data.description = data["node_description"];
+    update(edit_node, true);
 }
 /* end edit node */
 
@@ -325,19 +285,21 @@ function show_relevant_info(d) {
 
 
         for(let i in relevantData) {
-            let relevantData_url = relevantData[i].url;
-            let relevantData_title = relevantData[i].title;
+            if(relevantData.hasOwnProperty(i)){
+                let relevantData_url = relevantData[i].url;
+                let relevantData_title = relevantData[i].title;
 
-            let tr = document.createElement('tr');
-            let td = document.createElement('td');
-            td.setAttribute("data-relevant_info_index", i);
-            let url_pattern = new RegExp('^https?:\\/\\/[^\\n]+$/i');
-            if(url_pattern.test(relevantData_url)){
-                td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
+                let tr = document.createElement('tr');
+                let td = document.createElement('td');
+                td.setAttribute("data-relevant_info_index", i);
+                let url_pattern = new RegExp('^https?:\\/\\/[^\\n]+$/i');
+                if(url_pattern.test(relevantData_url)){
+                    td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
+                }
+                td.innerText = relevantData_title;
+                tr.append(td);
+                table_relevant_info_details.append(tr);
             }
-            td.innerText = relevantData_title;
-            tr.append(td);
-            table_relevant_info_details.append(tr);
         }
 
         let div_relevant_info_buttons = document.getElementById("relevant-info-details-buttons");
@@ -382,22 +344,24 @@ function show_relevant_info(d) {
             let query_list = d.query;
 
             for(let i in query_list) {
-                let tr = document.createElement('tr');
+                if(query_list.hasOwnProperty(i)){
+                    let tr = document.createElement('tr');
 
-                let td_input = document.createElement('td');
-                let queryCheckbox = document.createElement('input');
-                queryCheckbox.setAttribute("name", "searchQuery");
-                queryCheckbox.setAttribute("type", "checkbox");
-                queryCheckbox.setAttribute("value", query_list[i]);
-                td_input.append(queryCheckbox);
+                    let td_input = document.createElement('td');
+                    let queryCheckbox = document.createElement('input');
+                    queryCheckbox.setAttribute("name", "searchQuery");
+                    queryCheckbox.setAttribute("type", "checkbox");
+                    queryCheckbox.setAttribute("value", query_list[i]);
+                    td_input.append(queryCheckbox);
 
-                let td_text = document.createElement('td');
-                td_text.innerText = query_list[i];
+                    let td_text = document.createElement('td');
+                    td_text.innerText = query_list[i];
 
-                tr.append(td_input);
-                tr.append(td_text);
+                    tr.append(td_input);
+                    tr.append(td_text);
 
-                table_relevant_info_searches.append(tr);
+                    table_relevant_info_searches.append(tr);
+                }
             }
 
             document.getElementById("relevant-info-searches-form")
@@ -481,32 +445,28 @@ function send_add_relevant_info(d) {
     connection.send(JSON.stringify(add_data));
 
     $('#add-relevant-info').modal('hide');
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/relevant/add/",
-        data:
-            {
-                'node_id' : d.data.id,
-                'relevant_url' : relevant_url,
-                "relevant_title": relevant_title,
+}
+
+function add_relevant_info(data){
+
+    let target_node = null;
+    let node_list = root.descendants();
+
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["node_id"]){
+                target_node = node_list[i];
+                break;
             }
-    }).done(function(relevant_info_id){
-        // if data sending is successful
+        }
+    }
+    let relevant_obj = {
+        "id": data["relevant_id"],
+        "url": data["relevant_url"],
+        "title": data["relevant_title"]
+    };
 
-        let relevant_obj = {
-            "id": relevant_info_id,
-            "url": relevant_url,
-            "title": relevant_title
-        };
-
-        d.data.relevant.push(relevant_obj);
-
-    }).fail(function(){
-        // if data sending is failed
-        alert("関連情報追加エラー\nリロードしてください");
-    });
-    */
+    target_node.data.relevant.push(relevant_obj);
 }
 
 function show_delete_relevant_info(index,d){
@@ -534,10 +494,6 @@ function show_delete_relevant_info(index,d){
 }
 
 function send_delete_relevant_info(index, d) {
-    /*
-    let relevantData = d.data.relevant;
-    relevantData.splice(index, 1);
-    */
     let relevantData = d.data.relevant;
 
     let json_data = {
@@ -545,24 +501,34 @@ function send_delete_relevant_info(index, d) {
     };
     let delete_data = data_formatting("work","relevant_info","delete",json_data);
     connection.send(JSON.stringify(delete_data));
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/relevant/delete/",
-        data:
-            {
-                'relevant_id' : relevantData[index].id
-            }
-    }).done(function(){
-        // if data sending is successful
-        relevantData.splice(index, 1);
-    }).fail(function(){
-        // if data sending is failed
-        alert("関連情報削除エラー\nリロードしてください");
-    });
-    */
 }
 
+function delete_relevant_info(data) {
+    let target_node = null;
+    let delete_index = null;
+    let node_list = root.descendants();
+
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["node_id"]){
+                target_node = node_list[i];
+                break;
+            }
+        }
+    }
+    let relevantData_list = target_node.data.relevant;
+
+    for(let i in relevantData_list){
+        if(relevantData_list.hasOwnProperty(i)){
+            if(relevantData_list[i].id === data["relevant_id"]){
+                delete_index = i;
+                break;
+            }
+        }
+    }
+
+    relevantData_list.splice(delete_index, 1);
+}
 function show_edit_relevant_info(index, d) {
     let relevantData = d.data.relevant;
 
@@ -599,6 +565,7 @@ function send_edit_relevant_info(index, d) {
     }
 
     let json_data = {
+        'node_id' : d.id,
         'relevant_id' : relevant.id,
         'relevant_url' : relevant_url,
         'relevant_title': relevant_title
@@ -607,27 +574,31 @@ function send_edit_relevant_info(index, d) {
     connection.send(JSON.stringify(delete_data));
 
     $('#edit-relevant-info').modal('hide');
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/relevant/edit/",
-        data:
-            {
-                'relevant_id' : relevant.id,
-                'relevant_url' : relevant_url,
-                'relevant_title': relevant_title
+}
+
+function edit_relevant_info(data) {
+    let target_node = null;
+    let node_list = root.descendants();
+
+    for(let i in node_list){
+        if(node_list.hasOwnProperty(i)){
+            if(node_list[i].id === data["node_id"]){
+                target_node = node_list[i];
+                break;
             }
-    }).done(function(){
-        // if data sending is successful
-        relevant.url　= relevant_url;
-        relevant.title =relevant_title;
-    }).fail(function(){
-        // if data sending is failed
-        alert("関連情報編集エラー\nリロードしてください");
-    });
-    */
+        }
+    }
+    let relevantData_list = target_node.data.relevant;
 
-
+    for(let i in relevantData_list){
+        if(relevantData_list.hasOwnProperty(i)){
+            if(relevantData_list[i].id === data["relevant_id"]){
+                relevantData_list[i].url = data["relevant_url"];
+                relevantData_list[i].title = data["relevant_title"];
+                break;
+            }
+        }
+    }
 }
 
 function search_info() {
