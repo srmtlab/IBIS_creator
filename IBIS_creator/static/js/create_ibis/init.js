@@ -84,46 +84,47 @@ function init_data(websocket_url) {
     connection.onmessage =function (e) {
         let data = JSON.parse(e.data);
         let status = data["status"];
-        if(status === "init"){
-
+        if(init_flag && status === "init"){
+            theme_obj["name"] = data["theme"]["name"];
+            theme_obj["description"] = data["theme"]["description"];
         }else if (status === "work"){
             let type = data["type"];
             let operation = data["operation"];
             let data = data["data"];
 
-            if(type==="node")
+            if(type === "theme")
             {
-                if(operation==="add")
+                if(operation === "edit")
+                {
+                    edit_theme(data);
+                }
+            }
+            else if(type === "node")
+            {
+                if(operation === "add")
+                {
+                    add_node(data);
+                }
+                else if(operation === "delete")
                 {
 
                 }
-                else if(operation==="delete")
-                {
-
-                }
-                else if(operation==="edit")
+                else if(operation === "edit")
                 {
 
                 }
             }
-            else if(type==="theme")
+            else if(type === "relevant_info")
             {
-                if(operation==="edit")
+                if(operation === "add")
                 {
 
                 }
-            }
-            else if(type==="relevant_info")
-            {
-                if(operation==="add")
+                else if(operation === "delete")
                 {
 
                 }
-                else if(operation==="delete")
-                {
-
-                }
-                else if(operation==="edit")
+                else if(operation === "edit")
                 {
 
                 }

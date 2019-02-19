@@ -15,18 +15,16 @@ function show_edit_theme() {
     $('#edit-theme').modal();
 }
 
-function edit_theme() {
+function send_edit_theme() {
 
     if(!document.getElementById("edit-theme-name").value.trim() || !document.getElementById("edit-theme-description").value.trim()){
         alert("入力に不備があります");
         return;
     }
 
-    let old_theme_obj = Object.assign({}, theme_obj);
+    // let old_theme_obj = Object.assign({}, theme_obj);
     theme_obj["name"] = document.getElementById("edit-theme-name").value;
     theme_obj["description"] = document.getElementById("edit-theme-description").value;
-
-    sendMessage("theme", "edit", theme_obj);
 
     document.getElementById("navvar").firstElementChild.innerText = theme_obj["name"];
     document.title = theme_obj["name"];
@@ -39,25 +37,14 @@ function edit_theme() {
     connection.send(JSON.stringify(edit_data));
 
     $('#edit-theme').modal('hide');
-    /*
-    $.ajax({
-        type: 'POST',
-        url: base_url + "/api/theme/" + theme_id + "/theme/edit/",
-        data:
-            {
-                'name' : theme_obj["name"],
-                'description' : theme_obj["description"]
-            }
-    }).done(function(){
-        // if data sending is successful
-        document.getElementById("navvar").firstElementChild.innerText = theme_obj["name"];
-        document.title = theme_obj["name"];
-    }).fail(function(){
-        // if data sending is failed
-        theme_obj = old_theme_obj;
-        alert("テーマ編集エラー\nリロードしてください");
-    });
-    */
+}
+
+function edit_theme(data) {
+    theme_obj["name"] = data["name"];
+    theme_obj["description"] = data["description"];
+
+    document.getElementById("navvar").firstElementChild.innerText = theme_obj["name"];
+    document.title = theme_obj["name"];
 }
 /* end edit theme */
 
@@ -83,7 +70,7 @@ function show_add_node(d) {
         });
 }
 
-function add_node(d) {
+function send_add_node(d) {
 
     if(!document.getElementById("add-node-name").value.trim() || document.getElementById("add-node-type").value === "unselected"){
         alert("入力に不備があります");
@@ -155,6 +142,38 @@ function add_node(d) {
     */
 
 }
+
+function add_node(data) {
+    let node =
+        d3.hierarchy(
+            {
+                'id' : data["node_id"],
+                'name' : data["node_name"],
+                'type' : data["node_type"],
+                "description": data["node_description"],
+                'relevant' : {},
+                'children' : []
+            }
+        );
+
+    node.parent = d;
+    node.children = undefined;
+    node.depth = d.depth + 1;
+
+    if(d.children !== undefined || d._children !== undefined){
+        //if d already has child node
+        if(d._children !== undefined){
+            d.children = d._children;
+            d._children = undefined;
+        }
+    }else {
+        //if d still hasn't child node
+        d.children= [];
+    }
+    d.children.push(node);
+    d.data.children.push(node.data);
+    update(d, true);
+}
 /* end add node */
 
 /* start delete node */
@@ -180,7 +199,7 @@ function show_delete_node(d) {
         });
 }
 
-function delete_node(d) {
+function send_delete_node(d) {
 
     if(d.parent !== null)
     {
@@ -247,7 +266,7 @@ function show_edit_node(d) {
 
 }
 
-function edit_node(d) {
+function send_edit_node(d) {
     if(!document.getElementById("edit-node-name").value.trim()){
         alert("入力に不備があります");
         return;
@@ -443,7 +462,7 @@ function show_add_relevant_info(d) {
         });
 }
 
-function add_relevant_info(d) {
+function send_add_relevant_info(d) {
 
     if(!document.getElementById("add-relevant-info-title").value.trim() || !document.getElementById("add-relevant-info-url").value.trim()){
         alert("入力に不備があります");
@@ -514,7 +533,7 @@ function show_delete_relevant_info(index,d){
         });
 }
 
-function delete_relevant_info(index, d) {
+function send_delete_relevant_info(index, d) {
     /*
     let relevantData = d.data.relevant;
     relevantData.splice(index, 1);
@@ -569,7 +588,7 @@ function show_edit_relevant_info(index, d) {
         });
 }
 
-function edit_relevant_info(index, d) {
+function send_edit_relevant_info(index, d) {
     let relevant = d.data.relevant[index];
     let relevant_url = document.getElementById("edit-relevant-info-url").value;
     let relevant_title = document.getElementById("edit-relevant-info-title").value;
