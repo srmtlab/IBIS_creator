@@ -31,7 +31,15 @@ function edit_theme() {
     document.getElementById("navvar").firstElementChild.innerText = theme_obj["name"];
     document.title = theme_obj["name"];
 
+    let json_data = {
+        'name' : theme_obj["name"],
+        'description' : theme_obj["description"]
+    };
+    let edit_data = data_formatting("work","theme","edit",json_data);
+    connection.send(JSON.stringify(edit_data));
 
+    $('#edit-theme').modal('hide');
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/theme/edit/",
@@ -49,8 +57,7 @@ function edit_theme() {
         theme_obj = old_theme_obj;
         alert("テーマ編集エラー\nリロードしてください");
     });
-
-    $('#edit-theme').modal('hide');
+    */
 }
 /* end edit theme */
 
@@ -87,8 +94,6 @@ function add_node(d) {
     let node_type = document.getElementById("add-node-type").value;
     let node_description = document.getElementById("add-node-description").value;
 
-    $('#add-node').modal('hide');
-
     let json_data = {
         'node_name' : node_name,
         'node_type' : node_type,
@@ -98,6 +103,7 @@ function add_node(d) {
     let add_data = data_formatting("work","node","add",json_data);
     connection.send(JSON.stringify(add_data));
 
+    $('#add-node').modal('hide');
     /*
     $.ajax({
         type: 'POST',
@@ -178,6 +184,13 @@ function delete_node(d) {
 
     if(d.parent !== null)
     {
+
+        let json_data = {
+            'node_id' : d.data.id
+        };
+        let delete_data = data_formatting("work","node","delte",json_data);
+        connection.send(JSON.stringify(delete_data))
+        /*
         $.ajax({
             type: 'POST',
             url: base_url + "/api/theme/" + theme_id + "/node/delete/",
@@ -200,6 +213,7 @@ function delete_node(d) {
             // if data sending is failed
             alert("削除エラー\nリロードしてください");
         });
+        */
     }
     modal_obj = undefined;
 }
@@ -243,6 +257,17 @@ function edit_node(d) {
     let node_type = document.getElementById("edit-node-type").value;
     let node_description = document.getElementById("edit-node-description").value;
 
+    let json_data = {
+        'node_id' : d.data.id,
+        'node_name' : node_name,
+        'node_type' : node_type,
+        'node_description' : node_description
+    };
+    let edit_data = data_formatting('work','node','edit',json_data);
+    connection.send(JSON.stringify(edit_data));
+
+    $('#edit-node').modal('hide');
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/node/edit/",
@@ -263,8 +288,8 @@ function edit_node(d) {
         // if data sending is failed
         alert("編集エラー\nリロードしてください");
     });
+    */
 
-    $('#edit-node').modal('hide');
 }
 /* end edit node */
 
@@ -379,7 +404,6 @@ function show_relevant_info(d) {
         alert("推薦キーワードを取得することができませんでした");
     });
 
-
     $('#relevant-info').modal();
 
     $(".modal-backdrop")
@@ -429,6 +453,16 @@ function add_relevant_info(d) {
     let relevant_url = document.getElementById("add-relevant-info-url").value;
     let relevant_title = document.getElementById("add-relevant-info-title").value;
 
+    let json_data = {
+        'node_id' : d.data.id,
+        'relevant_url' : relevant_url,
+        "relevant_title": relevant_title
+    };
+    let add_data = data_formatting("work","relevant_info","add",json_data);
+    connection.send(JSON.stringify(add_data));
+
+    $('#add-relevant-info').modal('hide');
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/relevant/add/",
@@ -453,8 +487,7 @@ function add_relevant_info(d) {
         // if data sending is failed
         alert("関連情報追加エラー\nリロードしてください");
     });
-
-    $('#add-relevant-info').modal('hide');
+    */
 }
 
 function show_delete_relevant_info(index,d){
@@ -488,6 +521,12 @@ function delete_relevant_info(index, d) {
     */
     let relevantData = d.data.relevant;
 
+    let json_data = {
+        'relevant_id' : relevantData[index].id
+    };
+    let delete_data = data_formatting("work","relevant_info","delete",json_data);
+    connection.send(JSON.stringify(delete_data));
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/relevant/delete/",
@@ -502,6 +541,7 @@ function delete_relevant_info(index, d) {
         // if data sending is failed
         alert("関連情報削除エラー\nリロードしてください");
     });
+    */
 }
 
 function show_edit_relevant_info(index, d) {
@@ -538,6 +578,17 @@ function edit_relevant_info(index, d) {
         alert("入力に不備があります");
         return;
     }
+
+    let json_data = {
+        'relevant_id' : relevant.id,
+        'relevant_url' : relevant_url,
+        'relevant_title': relevant_title
+    };
+    let delete_data = data_formatting("work","relevant_info","edit",json_data);
+    connection.send(JSON.stringify(delete_data));
+
+    $('#edit-relevant-info').modal('hide');
+    /*
     $.ajax({
         type: 'POST',
         url: base_url + "/api/theme/" + theme_id + "/relevant/edit/",
@@ -555,8 +606,9 @@ function edit_relevant_info(index, d) {
         // if data sending is failed
         alert("関連情報編集エラー\nリロードしてください");
     });
+    */
 
-    $('#edit-relevant-info').modal('hide');
+
 }
 
 function search_info() {
