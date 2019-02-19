@@ -129,7 +129,7 @@ REDIS_PORT = get_secret("REDIS_PORT")
 # use Redis as channel layer
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': '',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [(REDIS_HOST, REDIS_PORT)],
         },

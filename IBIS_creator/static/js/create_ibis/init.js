@@ -146,60 +146,12 @@ function init_data(websocket_url) {
                 }
             }
         }
-    }
-    /*
-    let load_flag = true;
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: node_url
-    }).done(function(data){
-        // if data sending is successful
+    };
 
-        let ibisData = data;
+    connection.onerror = function(error) {
+        console.log(error);
+    };
 
-        $("#title").text(ibisData["name"]);
-
-        //Constructs a root node from the hierarchical data "ibisData"
-        root = d3.hierarchy(ibisData);
-
-        g = d3.select("#ibis").append("g");
-
-        d3.select("#ibis")
-            .call(
-                d3.zoom()
-                    .scaleExtent([1 / 8, 12])
-                    .on("zoom", zoom)
-            )
-            .on("dblclick.zoom", null);
-
-        update(root);
-
-    }).fail(function(data){
-        // if data sending is failed
-        load_flag = false;
-    }).always(function (data) {
-        // whether if data sending is failed or not
-    });
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: theme_url
-    }).done(function(data){
-        // if data sending is successful
-        theme_obj = data;
-    }).fail(function(data){
-        // if data sending is failed
-        load_flag = false;
-    }).always(function (data) {
-        // whether if data sending is failed or not
-    });
-
-    if(!load_flag){
-        alert("読み込みエラー\nリロードしてください");
-    }
-    */
 }
 
 function tr_default(tblID){
