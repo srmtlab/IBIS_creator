@@ -1,7 +1,6 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from channels.db import database_sync_to_async
 from .models import Theme
 from .models import Node
 from .models import NodeNode
@@ -137,37 +136,6 @@ class IBISConsumer(WebsocketConsumer):
                 save_flag = self.renew_relevant_info_database(data_operation, data)
         return save_flag
 
-    # Receive message from WebSocket
-    def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        status = text_data_json['status']
-
-        if status == "init":
-            # クライアントが，WebSocket通信を始めた瞬間であれば
-            async_to_sync(self.channel_layer.group_send)(
-                self.theme_name,
-                {
-                    'type': 'ibis_init',
-                }
-            )
-        elif status == "work":
-            data_type = text_data_json["type"]
-            data_operation = text_data_json["operation"]
-            data = text_data_json["data"]
-
-            async_to_sync(self.channel_layer.group_send)(
-                self.theme_name,
-                {
-                    'type': 'ibis_edit',
-                    'send_data': {
-                        'status': 'work',
-                        'type': data_type,
-                        'operation': data_operation,
-                        'data': data
-                    }
-                }
-            )
-
     def make_json(self, parent_node, json_data):
         json_data["id"] = parent_node.id
         json_data["name"] = parent_node.node_name
@@ -191,34 +159,55 @@ class IBISConsumer(WebsocketConsumer):
             json_data["children"].append(child_node)
             self.make_json(nodenode.child_node, child_node)
 
-    # Receive message from room group
-    def ibis_init(self, event):
-        theme_queryset = Theme.objects.filter(pk=self.theme_id)
+    # Receive message from WebSocket
+    def receive(self, text_data=None, bytes_data=None):
+        text_data_json = json.loads(text_data)
+        status = text_data_json['status']
 
-        if theme_queryset.exists():
-            theme = theme_queryset[0]
-            node_data = {}
-            parent_node = NodeNode.objects.filter(parent_node__child_node__isnull=True) \
-                .filter(child_node__theme_id=self.theme_id)[0].child_node
-            self.make_json(parent_node=parent_node, json_data=node_data)
-            init_data = {
-                'status': 'init',
-                'theme': {
-                    'name': theme.theme_name,
-                    'description': theme.theme_description
-                },
-                'node': node_data
-            }
-            # Send message to WebSocket
-            self.send(text_data=json.dumps(init_data))
+        if status == "init":
+            theme_queryset = Theme.objects.filter(pk=self.theme_id)
+            if theme_queryset.exists():
+                theme = theme_queryset[0]
+                node_data = {}
+                parent_node = NodeNode.objects.filter(parent_node__child_node__isnull=True) \
+                    .filter(child_node__theme_id=self.theme_id)[0].child_node
+                self.make_json(parent_node=parent_node, json_data=node_data)
 
-    # Receive message from room group
-    def ibis_edit(self, event):
-        data_type = event['send_data']["type"]
-        data_operation = event['send_data']["operation"]
-        data = event['send_data']["data"]
+                # クライアントが，WebSocket通信を始めた瞬間であれば
+                async_to_sync(self.channel_layer.group_send)(
+                    self.theme_name,
+                    {
+                        'type': 'send_ibis',
+                        'send_data': {
+                            'status': 'init',
+                            'theme': {
+                                'name': theme.theme_name,
+                                'description': theme.theme_description
+                            },
+                            'node': node_data
+                        }
+                    }
+                )
+        elif status == "work":
+            data_type = text_data_json["type"]
+            data_operation = text_data_json["operation"]
+            data = text_data_json["data"]
 
-        save_flag = self.renew_database(data_type=data_type, data_operation=data_operation, data=data)
-        # Send message to WebSocket
-        if save_flag:
-            self.send(text_data=json.dumps(event['send_data']))
+            save_flag = self.renew_database(data_type=data_type, data_operation=data_operation, data=data)
+
+            if save_flag:
+                async_to_sync(self.channel_layer.group_send)(
+                    self.theme_name,
+                    {
+                        'type': 'send_ibis',
+                        'send_data': {
+                            'status': 'work',
+                            'type': data_type,
+                            'operation': data_operation,
+                            'data': data
+                        }
+                    }
+                )
+
+    def send_ibis(self,event):
+        self.send(text_data=json.dumps(event['send_data']))

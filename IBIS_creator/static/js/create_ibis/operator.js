@@ -304,8 +304,7 @@ function show_relevant_info(d) {
                 let tr = document.createElement('tr');
                 let td = document.createElement('td');
                 td.setAttribute("data-relevant_info_index", i);
-                let url_pattern = new RegExp('^https?:\\/\\/[^\\n]+$/i');
-                if(url_pattern.test(relevantData_url)){
+                if(relevantData_url.match(/^https?:\/\//)){
                     td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
                 }
                 td.innerText = relevantData_title;
