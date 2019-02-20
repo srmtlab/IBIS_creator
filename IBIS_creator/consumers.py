@@ -28,6 +28,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    @database_sync_to_async
     async def renew_node_database(self, data_operation, data):
         if data_operation == "add":
             node_name = data["node_name"]
@@ -73,6 +74,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
             else:
                 return False
 
+    @database_sync_to_async
     async def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
             theme_obj = Theme.objects.filter(pk=self.theme_id)[0]
@@ -84,6 +86,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
         else:
             return False
 
+    @database_sync_to_async
     async def renew_relevant_info_database(self, data_operation, data):
         if data_operation == "add":
             node_id = int(data["node_id"])
@@ -125,6 +128,7 @@ class IBISConsumer(AsyncWebsocketConsumer):
             else:
                 return False
 
+    @database_sync_to_async
     async def renew_database(self, data_type, data_operation, data):
         save_flag = False
         if Theme.objects.filter(pk=self.theme_id).exists():

@@ -124,17 +124,29 @@ function add_node(data) {
     node.children = undefined;
     node.depth = parent_node.depth + 1;
 
-    if(parent_node.children !== undefined || parent_node._children !== undefined){
-        //if d already has child node
-        if(parent_node._children !== undefined){
-            parent_node.children = parent_node._children;
+    if(parent_node.children !== undefined || parent_node._children !== undefined)
+    {
+        //if parent_node already has child node
+
+        if(parent_node.children !== undefined)
+        {
+            parent_node.children.push(node);
             parent_node._children = undefined;
         }
-    }else {
-        //if d still hasn't child node
-        parent_node.children= [];
+        else if(parent_node._children !== undefined)
+        {
+            parent_node._children.push(node);
+            parent_node.children = undefined;
+        }
+
     }
-    parent_node.children.push(node);
+    else
+    {
+        //if parent_node still hasn't child node
+        parent_node.children= [];
+        parent_node.children.push(node);
+    }
+
     parent_node.data.children.push(node.data);
     update(parent_node, true);
 }
@@ -171,7 +183,7 @@ function send_delete_node(d) {
         let json_data = {
             'node_id' : d.data.id
         };
-        let delete_data = data_formatting("work","node","delte",json_data);
+        let delete_data = data_formatting("work","node","delete",json_data);
         connection.send(JSON.stringify(delete_data))
     }
     modal_obj = undefined;
