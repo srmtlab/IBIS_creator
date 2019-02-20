@@ -33,6 +33,7 @@ def make_theme(request):
         raise Http404()
 
 
+"""
 @csrf_exempt
 def add_relevant_info(request, theme_id):
     if request.method == "POST":
@@ -52,6 +53,7 @@ def add_relevant_info(request, theme_id):
         raise Http404()
     else:
         raise Http404()
+"""
 
 
 @ensure_csrf_cookie

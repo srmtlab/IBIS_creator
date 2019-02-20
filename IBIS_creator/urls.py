@@ -4,7 +4,7 @@ from . import views
 """
 POSTリクエスト (関連情報の追加以外はWebSocketに置き換え予定)
     api/make_theme/ : テーマの作成
-    api/theme/{theme_id}/relevant/add/ : IBIS_relevantを用いた関連情報の追加
+    api/theme/{theme_id}/relevant/add/ : IBIS_relevantを用いた関連情報の追加 <- 使われていません．
 
 GETリクエスト
     / : index.htmlの表示
@@ -20,7 +20,7 @@ GETリクエスト
 urlpatterns = [
     # POST request
     path('api/make_theme/', views.make_theme, name='make_theme'),
-    path('api/theme/<int:theme_id>/relevant/add/', views.add_relevant_info, name='add_relevant-info'),
+    # path('api/theme/<int:theme_id>/relevant/add/', views.add_relevant_info, name='add_relevant-info'),
 
     # GET request
     path('', views.index, name='index'),
