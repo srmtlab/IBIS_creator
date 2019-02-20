@@ -7,7 +7,6 @@ from .models import Theme
 from .models import Node
 from .models import RelevantInfo
 from .models import NodeNode
-# from .views import make_json
 
 
 admin.site.site_title = 'IBIS CREATOR admin'
