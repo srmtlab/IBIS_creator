@@ -508,6 +508,7 @@ function send_delete_relevant_info(index, d) {
     let relevantData = d.data.relevant;
 
     let json_data = {
+        'node_id' : d.data.id,
         'relevant_id' : relevantData[index].id
     };
     let delete_data = data_formatting("work","relevant_info","delete",json_data);
@@ -527,6 +528,8 @@ function delete_relevant_info(data) {
             }
         }
     }
+
+    console.log(target_node);
     let relevantData_list = target_node.data.relevant;
 
     for(let i in relevantData_list){
