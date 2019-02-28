@@ -169,8 +169,8 @@ class IBISConsumer(WebsocketConsumer):
             if theme_queryset.exists():
                 theme = theme_queryset[0]
                 node_data = {}
-                parent_node = NodeNode.objects.filter(parent_node__child_node__isnull=True) \
-                    .filter(child_node__theme_id=self.theme_id)[0].child_node
+                parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme_id=self.theme_id)[0]\
+                    .child_node
                 self.make_json(parent_node=parent_node, json_data=node_data)
 
                 # クライアントが，WebSocket通信を始めた瞬間であれば

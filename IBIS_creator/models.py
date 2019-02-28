@@ -30,5 +30,5 @@ class RelevantInfo(models.Model):
 
 
 class NodeNode(models.Model):
-    parent_node = models.ForeignKey(Node, on_delete=models.CASCADE, null=True, related_name="parent_node")
-    child_node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name="child_node")
+    parent_node = models.ForeignKey(Node, on_delete=models.CASCADE, null=True)
+    child_node = models.ForeignKey(Node, on_delete=models.CASCADE)
