@@ -12,9 +12,9 @@ from config.settings.base import VIRTUOSO_UPDATE_ENDPOINT
 class Virtuoso:
     def __init__(self):
         self.ontology = ONTOLOGY
-        self.theme_pref = LOD_RESOURCE + "theme/"
-        self.node_pref = LOD_RESOURCE + "node/"
-        self.relevant_pref = LOD_RESOURCE + "relevant/"
+        self.theme_resource_pref = LOD_RESOURCE + "theme/"
+        self.node_resource_pref = LOD_RESOURCE + "node/"
+        self.relevant_resource_pref = LOD_RESOURCE + "relevant/"
         self.updateEndpoint = VIRTUOSO_UPDATE_ENDPOINT
         self.graphURI = LOD_GRAPH_URI
         self.rdf_type = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
@@ -39,8 +39,8 @@ class Virtuoso:
                "&timeout=" + "0"
 
     def makeTheme(self, theme, node):
-        theme_url = "<" + self.theme_pref+str(theme.id) + ">"
-        node_url = "<" + self.node_pref+str(node.id) + ">"
+        theme_url = "<" + self.theme_resource_pref+str(theme.id) + ">"
+        node_url = "<" + self.node_resource_pref+str(node.id) + ">"
         self.querystring = "INSERT INTO <" + self.graphURI + "> { \n" \
                            + self.convert_ttl(theme_url, self.rdf_type, self.make_ibis_ontology("Theme")) \
                            + self.convert_ttl(theme_url, self.dc_title, '"' + theme.theme_name + '"@ja') \
@@ -50,62 +50,62 @@ class Virtuoso:
         self.query()
 
     def updateTheme(self, theme):
-        theme_url = "<" + self.theme_pref + str(theme.id) + ">"
+        theme_url = "<" + self.theme_resource_pref + str(theme.id) + ">"
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "<" + self.theme_pref + str(theme.id) + "> ?q ?o }" \
+                           + "<" + self.theme_resource_pref + str(theme.id) + "> ?q ?o }" \
                            + "INSERT {" \
                            + self.convert_ttl(theme_url, self.rdf_type, self.make_ibis_ontology("Theme")) \
                            + self.convert_ttl(theme_url, self.dc_title, '"' + theme.theme_name + '"@ja') \
                            + self.convert_ttl(theme_url, self.dc_description, '"""' + theme.theme_description + '"""@ja') \
                            + self.convert_ttl(theme_url, self.make_ibis_ontology("rootNode"), theme_url)\
                            + " }" \
-                           + "where{ <" + self.theme_pref + str(theme.id) + "> ?q ?o}"
+                           + "where{ <" + self.theme_resource_pref + str(theme.id) + "> ?q ?o}"
         self.query()
 
     def addNode(self, node, parentID):
-        theme_url = "<" + self.theme_pref + str(node.theme.id) + ">"
-        node_url = "<" + self.node_pref + str(node.id) + ">"
+        theme_url = "<" + self.theme_resource_pref + str(node.theme.id) + ">"
+        node_url = "<" + self.node_resource_pref + str(node.id) + ">"
         node_type = self.make_ibis_ontology(node.node_type)
         self.querystring = "INSERT INTO <" + self.graphURI + "> { \n" \
                            + self.convert_ttl(node_url, self.rdf_type, node_type) \
                            + self.convert_ttl(node_url, self.make_ibis_ontology("theme"), theme_url) \
                            + self.convert_ttl(node_url, self.dc_title, '"' + node.node_name + '"@ja') \
                            + (self.convert_ttl(node_url, self.dc_description, '"""' + node.node_description + '"""@ja') if len((node.node_description).strip()) != 0 else "") \
-                           + (self.convert_ttl(node_url, self.make_ibis_ontology("responseOf"), "<" + self.node_pref + str(parentID) + ">") if parentID is not None else "") \
+                           + (self.convert_ttl(node_url, self.make_ibis_ontology("responseOf"), "<" + self.node_resource_pref + str(parentID) + ">") if parentID is not None else "") \
                            + "}"
         self.query()
 
     def delNode(self, node_id):
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "<" + self.node_pref + str(node_id) + "> ?q ?o." \
-                           + "} where{ <" + self.node_pref + str(node_id) + "> ?q ?o.}"
+                           + "<" + self.node_resource_pref + str(node_id) + "> ?q ?o." \
+                           + "} where{ <" + self.node_resource_pref + str(node_id) + "> ?q ?o.}"
         self.query()
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "?s ?q <" + self.node_pref + str(node_id) + ">." \
-                           + "} where{ ?s ?q <" + self.node_pref + str(node_id) + ">.}"
+                           + "?s ?q <" + self.node_resource_pref + str(node_id) + ">." \
+                           + "} where{ ?s ?q <" + self.node_resource_pref + str(node_id) + ">.}"
         self.query()
 
 
     def updateNode(self, node, parentID):
-        theme_url = "<" + self.theme_pref+str(node.theme.id) + ">"
-        node_url = "<" + self.node_pref + str(node.id) + ">"
+        theme_url = "<" + self.theme_resource_pref+str(node.theme.id) + ">"
+        node_url = "<" + self.node_resource_pref + str(node.id) + ">"
         node_type = self.make_ibis_ontology(node.node_type)
 
         self.querystring = "WITH <" + self.graphURI + "> DELETE{ \n" \
-                           + "<" + self.node_pref + str(node.id) + "> ?q ?o. \n}" \
+                           + "<" + self.node_resource_pref + str(node.id) + "> ?q ?o. \n}" \
                            + "INSERT {" \
                            + self.convert_ttl(node_url, self.rdf_type, node_type) \
                            + self.convert_ttl(node_url, self.make_ibis_ontology("theme"), theme_url) \
                            + self.convert_ttl(node_url, self.dc_title, '"' + node.node_name + '"@ja') \
                            + (self.convert_ttl(node_url, self.dc_description, '"""' + node.node_description + '"""@ja') if len((node.node_description).strip()) != 0 else "") \
-                           + (self.convert_ttl(node_url, self.make_ibis_ontology("responseOf"), "<" +self.node_pref + str(parentID) + ">") if parentID is not None else "") \
+                           + (self.convert_ttl(node_url, self.make_ibis_ontology("responseOf"), "<" +self.node_resource_pref + str(parentID) + ">") if parentID is not None else "") \
                            + " }" \
-                           + "where{ <" + self.node_pref + str(node.id) + "> ?q ?o}"
+                           + "where{ <" + self.node_resource_pref + str(node.id) + "> ?q ?o}"
         self.query()
 
     def addRelevantInfo(self, relevant):
-        node_url = "<" + self.node_pref + str(relevant.node.id) + ">"
-        relevant_url = "<" + self.relevant_pref + str(relevant.id) + ">"
+        node_url = "<" + self.node_resource_pref + str(relevant.node.id) + ">"
+        relevant_url = "<" + self.relevant_resource_pref + str(relevant.id) + ">"
 
         self.querystring = "INSERT INTO <" + self.graphURI + "> {" \
                            + self.convert_ttl(node_url, self.make_ibis_ontology("relevant"), relevant_url) \
@@ -118,20 +118,20 @@ class Virtuoso:
 
     def delRelevantInfo(self, relevant_index):
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "<" + self.relevant_pref + str(relevant_index) + "> ?q ?o. }" \
-                           + "where{ <" + self.relevant_pref + str(relevant_index) + "> ?q ?o.}"
+                           + "<" + self.relevant_resource_pref + str(relevant_index) + "> ?q ?o. }" \
+                           + "where{ <" + self.relevant_resource_pref + str(relevant_index) + "> ?q ?o.}"
         self.query()
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "?s ?q <" + self.relevant_pref + str(relevant_index) + ">.}" \
-                           + "where{ ?s ?q <" + self.relevant_pref + str(relevant_index) + ">.}"
+                           + "?s ?q <" + self.relevant_resource_pref + str(relevant_index) + ">.}" \
+                           + "where{ ?s ?q <" + self.relevant_resource_pref + str(relevant_index) + ">.}"
         self.query()
 
     def updateRelevantInfo(self, relevant):
-        node_url = "<" + self.node_pref + str(relevant.node.id) + ">"
-        relevant_url = "<" + self.relevant_pref + str(relevant.id) + ">"
+        node_url = "<" + self.node_resource_pref + str(relevant.node.id) + ">"
+        relevant_url = "<" + self.relevant_resource_pref + str(relevant.id) + ">"
 
         self.querystring = "WITH <" + self.graphURI + "> DELETE{" \
-                           + "<" + self.relevant_pref + str(relevant.id) + "> ?q ?o }" \
+                           + "<" + self.relevant_resource_pref + str(relevant.id) + "> ?q ?o }" \
                            + "INSERT {" \
                            + self.convert_ttl(node_url, self.make_ibis_ontology("relevant"), relevant_url) \
                            + self.convert_ttl(relevant_url, self.rdf_type, self.make_ibis_ontology("RelevantInfo")) \
@@ -139,5 +139,5 @@ class Virtuoso:
                            + self.convert_ttl(relevant_url, self.make_ibis_ontology("relatedURL"), "<" + relevant.relevant_url + ">") \
                            + self.convert_ttl(relevant_url, self.make_ibis_ontology("node"), node_url) \
                            + " }" \
-                           + "where{ <" + self.relevant_pref + str(relevant.id) + "> ?q ?o}"
+                           + "where{ <" + self.relevant_resource_pref + str(relevant.id) + "> ?q ?o}"
         self.query()

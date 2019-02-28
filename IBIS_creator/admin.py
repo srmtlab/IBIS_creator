@@ -8,7 +8,8 @@ from .models import Theme
 from .models import Node
 from .models import RelevantInfo
 from .models import NodeNode
-
+from config.settings.base import LOD_RESOURCE
+from config.settings.base import ONTOLOGY
 
 admin.site.site_title = 'IBIS CREATOR admin'
 admin.site.site_header = 'IBIS CREATOR データ管理'
@@ -68,6 +69,17 @@ def download_json(modeladmin, request, queryset):
 
 
 def download_ttl(modeladmin, request, queryset):
+
+    ttl_string = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n " \
+                 "@prefix dct: <http://purl.org/dc/terms/> .\n\n"
+
+    ontology = ONTOLOGY
+    theme_resource_pref = LOD_RESOURCE + "theme/"
+    node_resource_pref = LOD_RESOURCE + "node/"
+    relevant_resource_pref = LOD_RESOURCE + "relevant/"
+
+    def make_ibis_ontology(self, query):
+        return "<" + ontology + query + ">"
 
     for theme_obj in queryset:
         json_data = {}
