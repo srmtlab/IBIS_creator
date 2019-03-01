@@ -32,8 +32,6 @@ Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and 
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
 - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
-<<<<<<< HEAD
->>>>>>> cfbd9d05ac1bdd71c7fed26de709a929d2134295
 
 ```json
 "ALLOWED_HOSTS": ["example.com","example.jp"]
