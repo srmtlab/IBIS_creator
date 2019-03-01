@@ -15,5 +15,6 @@ with open('local_settings.json', "w") as fw:
         "VIRTUOSO_USER": "",
         "VIRTUOSO_PASSWORD": "",
         "VIRTUOSO_UPDATE_ENDPOINT": "",
+        "BASE_URL": "",
     }
     json.dump(local_settings, fw, indent=2)

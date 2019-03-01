@@ -11,8 +11,7 @@ from .models import RelevantInfo
 from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
-
-base_url = ""
+from config.settings.base import BASE_URL
 
 
 def make_theme(request):
@@ -61,7 +60,7 @@ def index(request):
     template = loader.get_template('IBIS_creator/index.html')
     theme_list = Theme.objects.all().order_by("id").reverse()
     context = {
-        'base_url': base_url,
+        'base_url': BASE_URL,
         'theme_list': theme_list
     }
     return HttpResponse(template.render(context, request))
@@ -72,7 +71,7 @@ def show_theme(request, theme_id):
         template = loader.get_template('IBIS_creator/create_ibis.html')
         theme = Theme.objects.filter(pk=theme_id)[0]
         context = {
-            'base_url': base_url,
+            'base_url': BASE_URL,
             'theme': theme
         }
         return HttpResponse(template.render(context, request))
