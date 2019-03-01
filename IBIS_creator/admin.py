@@ -1,5 +1,6 @@
 from io import BytesIO
 import zipfile
+from io import StringIO
 import json
 import datetime
 from django.contrib import admin
@@ -78,31 +79,60 @@ def download_ttl(modeladmin, request, queryset):
     node_resource_pref = LOD_RESOURCE + "node/"
     relevant_resource_pref = LOD_RESOURCE + "relevant/"
 
-    def make_ibis_ontology(self, query):
+    def make_ibis_ontology(query):
         return "<" + ontology + query + ">"
 
-    for theme_obj in queryset:
-        json_data = {}
-        parent_node = NodeNode.objects.filter(parent_node__isnull=True).filter(child_node__theme__id=theme_obj.id)[0] \
-            .child_node
-        make_json(parent_node=parent_node,json_data=json_data)
+    def convert_ttl(subject, predicate, object):
+        return subject + " " + predicate + " " + object + ". \n"
 
-        filename = (theme_obj.theme_name + ".json")
-        json_data = {
-            "Theme": {
-                "id": theme_obj.id,
-                "name": theme_obj.theme_name,
-                "description": theme_obj.theme_description
-            },
-            "Node": json_data
-        }
-        json_data = json.dumps(json_data, ensure_ascii=False, indent='\t')
+    for theme in queryset:
+        theme_obj = "<" + theme_resource_pref + str(theme.id) + ">"
+        theme_name = '"' + theme.theme_name + '"@ja'
+        theme_description = '"""' + theme.theme_description + '"""@ja'
+        rootNode_id = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme_id=theme.theme_id)[0] \
+            .child_node.id
+        theme_rootNode = "<" + node_resource_pref + str(rootNode_id) + ">"
 
-        zip_file.writestr(zinfo_or_arcname=filename, data=json_data)
+        ttl_string += convert_ttl(theme_obj, "rdf:type", make_ibis_ontology("Theme")) + \
+                      convert_ttl(theme_obj, "dct:title", theme_name) + \
+                      convert_ttl(theme_obj, "dct:description", theme_description) + \
+                      convert_ttl(theme_obj, make_ibis_ontology("rootNode"), theme_rootNode) + "\n"
 
-    zip_file.close()
-    response = HttpResponse(memory_file.getvalue(), content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename=IBIS_json.zip'
+        node_queryset = Node.objects.filter(theme=theme)
+        for node in node_queryset:
+            node_obj = "<" + node_resource_pref + str(node.id) + ">"
+            node_name = '"' + node.node_name + '"@ja'
+            ttl_string += convert_ttl(node_obj, "rdf:type", make_ibis_ontology(node.node_type)) + \
+                          convert_ttl(node_obj, make_ibis_ontology("theme"), theme_obj) + \
+                          convert_ttl(node_obj, "dct:title", node_name)
+
+            node_description = node.node_description
+            if len(node_description.strip()) != 0:
+                node_description = '"""' + node_description + '"""@ja'
+                ttl_string += convert_ttl(node_obj, "dct:title", node_description)
+
+            nodenode_queryset = NodeNode.objects.filter(parent_node=node)
+            for nodenode in nodenode_queryset:
+                child_node_obj = "<" + node_resource_pref + str(nodenode.child_node.id) + ">"
+                ttl_string += convert_ttl(child_node_obj, make_ibis_ontology("responseOf"), node_obj)
+
+            relevant_info_queryset = RelevantInfo.objects.filter(node=node)
+            for relevant_info in relevant_info_queryset:
+                relevant_info_obj = "<" + relevant_resource_pref + str(relevant_info.id) + ">"
+                relevant_url = '<' + relevant_info.relevant_url + '>'
+                relevant_title = '"' + relevant_info.relevant_title + '"@ja'
+
+                ttl_string += convert_ttl(node_obj, make_ibis_ontology("relevant"), relevant_info_obj) + \
+                              convert_ttl(relevant_info_obj, "rdf:type", make_ibis_ontology("RelevantInfo")) + \
+                              convert_ttl(relevant_info_obj, "dct:title", relevant_title) + \
+                              convert_ttl(relevant_info_obj, make_ibis_ontology("relatedURL"), relevant_url) + \
+                              convert_ttl(relevant_info_obj, make_ibis_ontology("node"), node_obj)
+
+    file = StringIO()
+    file.write(ttl_string)
+    response = HttpResponse(file.getvalue(), content_type="text/turtle")
+    response['Content-Disposition'] = 'attachment; filename=IBIS_creator-%s.ttl' % datetime.date.today()
+    file.close()
     return response
 
 
