@@ -32,6 +32,11 @@ Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and 
 - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
 - "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons.IBIS CREATOR can also be installed under a relative URL, for example http://example.com/IBIS_creator/
 
+```json
+# example
+"ALLOWED_HOSTS": ["example.com","example.jp"]
+```
+
 ## migrate database
 ```bash
 python3 manage.py migrate --settings config.settings.production
@@ -41,7 +46,7 @@ python3 manage.py migrate --settings config.settings.production
 
 ## run the app
 ```bash
-$ python3 manage.py runserver --settings config.settings.production
+python3 manage.py runserver --settings config.settings.production
 ```
 
 # For Developer
@@ -54,10 +59,6 @@ python3 SetUp.py
 ```
 
 Open `local_settings.json` and add `localhost` and `127.0.0.1` in "ALLOWED_HOSTS"
-```json
-# example
-"ALLOWED_HOSTS": ["localhost","127.0.0.1"]
-```
 
 ## migrate database
 ```bash
@@ -65,6 +66,7 @@ python3 manage.py migrate --settings config.settings.local
 python3 manage.py makemigrations IBIS_creator --settings config.settings.local
 python3 manage.py migrate --settings config.settings.local
 ```
+
 ## run the app
 ```bash
 python3 manage.py runserver --settings config.settings.local
