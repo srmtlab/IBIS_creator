@@ -28,7 +28,6 @@ class Virtuoso:
         return "<" + self.ontology + query + ">"
 
     def query(self):
-        return
         requests.get(self.makeURL(), auth=HTTPDigestAuth(VIRTUOSO_USER, VIRTUOSO_PASSWORD))
 
     def makeURL(self):

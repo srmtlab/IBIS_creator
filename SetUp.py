@@ -10,6 +10,7 @@ with open('local_settings.json', "w") as fw:
         "REDIS_HOST": "localhost",
         "REDIS_PORT": 6379,
         "BASE_URL": "",
+        "LOD": False,
         "LOD_RESOURCE": "",
         "LOD_GRAPH_URI": "",
         "ONTOLOGY": "http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#",

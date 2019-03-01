@@ -148,3 +148,4 @@ ONTOLOGY = get_secret("ONTOLOGY")
 VIRTUOSO_UPDATE_ENDPOINT = get_secret("VIRTUOSO_UPDATE_ENDPOINT")
 
 BASE_URL = "/" + get_secret("BASE_URL")
+LOD = get_secret("LOD")

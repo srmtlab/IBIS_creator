@@ -12,6 +12,7 @@ from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
 from config.settings.base import BASE_URL
+from config.settings.base import LOD
 
 
 def make_theme(request):
@@ -25,8 +26,9 @@ def make_theme(request):
                         theme=theme_obj)
         node_obj.save()
         NodeNode(child_node=node_obj).save()
-        Virtuoso().makeTheme(theme_obj, node_obj)
-        Virtuoso().addNode(node_obj, None)
+        if LOD:
+            Virtuoso().makeTheme(theme_obj, node_obj)
+            Virtuoso().addNode(node_obj, None)
         return redirect('../../theme/' + str(theme_obj.id) + '/')
     else:
         raise Http404()

@@ -6,6 +6,7 @@ from .models import Node
 from .models import NodeNode
 from .models import RelevantInfo
 from .virtuoso import Virtuoso
+from config.settings.base import LOD
 
 
 class IBISConsumer(WebsocketConsumer):
@@ -40,13 +41,15 @@ class IBISConsumer(WebsocketConsumer):
             node_obj.save()
             NodeNode(parent_node=Node.objects.filter(pk=parent_id)[0], child_node=node_obj).save()
             data["node_id"] = node_obj.id
-            Virtuoso().addNode(node_obj, parent_id)
+            if LOD:
+                Virtuoso().addNode(node_obj, parent_id)
             return True
 
         elif data_operation == "delete":
             node_id = int(data["node_id"])
             Node.objects.filter(pk=node_id).delete()
-            Virtuoso().delNode(node_id)
+            if LOD:
+                Virtuoso().delNode(node_id)
             return True
 
         elif data_operation == "edit":
@@ -65,10 +68,11 @@ class IBISConsumer(WebsocketConsumer):
 
                 parent_obj = NodeNode.objects.filter(child_node=node_obj)[0].parent_node
 
-                if parent_obj is None:
-                    Virtuoso().updateNode(node_obj, None)
-                else:
-                    Virtuoso().updateNode(node_obj, parent_obj.id)
+                if LOD:
+                    if parent_obj is None:
+                        Virtuoso().updateNode(node_obj, None)
+                    else:
+                        Virtuoso().updateNode(node_obj, parent_obj.id)
                 return True
             else:
                 return False
@@ -79,7 +83,8 @@ class IBISConsumer(WebsocketConsumer):
             theme_obj.theme_name = data["name"]
             theme_obj.theme_description = data["description"]
             theme_obj.save()
-            Virtuoso().updateTheme(theme_obj)
+            if LOD:
+                Virtuoso().updateTheme(theme_obj)
             return True
         else:
             return False
@@ -97,7 +102,8 @@ class IBISConsumer(WebsocketConsumer):
                                                  node=node_obj)
                 relevant_info_obj.save()
                 data["relevant_id"] = relevant_info_obj.id
-                Virtuoso().addRelevantInfo(relevant_info_obj)
+                if LOD:
+                    Virtuoso().addRelevantInfo(relevant_info_obj)
                 return True
             else:
                 return False
@@ -106,7 +112,8 @@ class IBISConsumer(WebsocketConsumer):
             relevant_info_queryset = RelevantInfo.objects.filter(pk=delete_index)
             if relevant_info_queryset.exists():
                 relevant_info_queryset.delete()
-                Virtuoso().delRelevantInfo(delete_index)
+                if LOD:
+                    Virtuoso().delRelevantInfo(delete_index)
                 return True
             else:
                 return False
@@ -120,7 +127,8 @@ class IBISConsumer(WebsocketConsumer):
                 relevant_info_obj.relevant_url = relevant_url
                 relevant_info_obj.relevant_title = relevant_title
                 relevant_info_obj.save()
-                Virtuoso().updateRelevantInfo(relevant_info_obj)
+                if LOD:
+                    Virtuoso().updateRelevantInfo(relevant_info_obj)
                 return True
             else:
                 return False
