@@ -209,5 +209,5 @@ class IBISConsumer(WebsocketConsumer):
                     }
                 )
 
-    def send_ibis(self,event):
+    def send_ibis(self, event):
         self.send(text_data=json.dumps(event['send_data']))
