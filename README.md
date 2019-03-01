@@ -33,8 +33,9 @@ Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and 
 - "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons. IBIS CREATOR can also be installed under a relative URL, for example http://example.com/IBIS_creator/
 
 ```json
-# example
 "ALLOWED_HOSTS": ["example.com","example.jp"]
+# not recommended
+"BASE_URL": "IBIS_creator"
 ```
 
 ## migrate database
