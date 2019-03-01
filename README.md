@@ -27,7 +27,7 @@ python3 SetUp.py
 
 Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
-- "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons. IBIS CREATOR can also be installed under a relative URL, for example http://example.com/IBIS_creator/
+- "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons. IBIS CREATOR can also be installed under a relative URL, for example `http://example.com/IBIS_creator/`
 - "LOD" : If you publish data in IBIS CREATOR, you should set this variable into true
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
