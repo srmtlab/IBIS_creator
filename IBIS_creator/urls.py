@@ -2,18 +2,18 @@ from django.urls import path
 from . import views
 
 """
-POSTリクエスト (関連情報の追加以外はWebSocketに置き換え予定)
+POSTリクエスト
     api/make_theme/ : テーマの作成
     api/theme/{theme_id}/relevant/add/ : IBIS_relevantを用いた関連情報の追加 <- 使われていません．
 
 GETリクエスト
     / : index.htmlの表示
     theme/{theme_id}/ : create_ibis.htmlの取得
-    api/theme/relevant/search/?q={query} : 関連キーワードの推薦
+    api/relevant/search/?q={query} : 関連キーワードの推薦
 
     LOD関連
-    ontology : ontology定義ファイル
-    resource/{theme,node,relevant}/ : テーマ，ノード，関連情報に関するリソース情報
+    ontology/ : ontology定義ファイル
+    resource/{theme_id,node_id,relevant_id}/ : テーマ，ノード，関連情報に関するリソース情報
 
 """
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('theme/<int:theme_id>/', views.show_theme, name='show_theme'),
     path('api/relevant/search/', views.search_relevant_info, name='search_relevant-info'),
+
     # LODに関するURL(オントロジー・URIに関する情報)
     path('ontology/', views.ontology, name='ontology'),
     path('resource/theme/<int:theme_id>/', views.resource_theme_info, name='resource_theme-info'),
