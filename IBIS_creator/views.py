@@ -15,6 +15,7 @@ from config.settings.base import BASE_URL
 from config.settings.base import LOD
 
 
+@ensure_csrf_cookie
 def make_theme(request):
     if request.method == "POST":
         theme = request.POST
@@ -71,7 +72,7 @@ def index(request):
 def show_theme(request, theme_id):
     if Theme.objects.filter(pk=theme_id).exists():
         template = loader.get_template('IBIS_creator/create_ibis.html')
-        theme = Theme.objects.filter(pk=theme_id)[0]
+        theme = Theme.objects.get(pk=theme_id)
         context = {
             'base_url': BASE_URL,
             'theme': theme

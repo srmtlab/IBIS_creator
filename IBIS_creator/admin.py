@@ -36,7 +36,7 @@ def download_json(modeladmin, request, queryset):
             },
         }
         json_node_data = json_data["Node"]
-        node_queryset = Node.objects.filter(theme=theme_obj)
+        node_queryset = theme_obj.nodes.all()
         for node in node_queryset:
             node_data = {
                 "id": node.id,
@@ -48,9 +48,9 @@ def download_json(modeladmin, request, queryset):
             }
             json_node_data["nodes"].append(node_data)
 
-            node_data["child_node_id"] = NodeNode.objects.filter(parent_node=node).values_list("child_node__id")
+            node_data["child_node_id"] = node.parent.all().values_list("child_node__id")
 
-            relevant_info_queryset = RelevantInfo.objects.filter(node=node)
+            relevant_info_queryset = node.relevant_info.all()
             for relevant_info in relevant_info_queryset:
                 relevant_info_data = {
                     "id": relevant_info.id,
@@ -98,7 +98,7 @@ def download_ttl(modeladmin, request, queryset):
                       convert_ttl(theme_obj, "dct:description", theme_description) + \
                       convert_ttl(theme_obj, make_ibis_ontology("rootNode"), theme_rootNode) + "\n"
 
-        node_queryset = Node.objects.filter(theme=theme)
+        node_queryset = theme.nodes.all()
         for node in node_queryset:
             node_obj = "<" + node_resource_pref + str(node.id) + ">"
             node_name = '"' + node.node_name + '"@ja'
@@ -111,12 +111,12 @@ def download_ttl(modeladmin, request, queryset):
                 node_description = '"""' + node_description + '"""@ja'
                 ttl_string += convert_ttl(node_obj, "dct:title", node_description)
 
-            nodenode_queryset = NodeNode.objects.filter(parent_node=node)
+            nodenode_queryset = node.parent.all()
             for nodenode in nodenode_queryset:
                 child_node_obj = "<" + node_resource_pref + str(nodenode.child_node.id) + ">"
                 ttl_string += convert_ttl(child_node_obj, make_ibis_ontology("responseOf"), node_obj)
 
-            relevant_info_queryset = RelevantInfo.objects.filter(node=node)
+            relevant_info_queryset = node.relevant_info.all()
             for relevant_info in relevant_info_queryset:
                 relevant_info_obj = "<" + relevant_resource_pref + str(relevant_info.id) + ">"
                 relevant_url = '<' + relevant_info.relevant_url + '>'

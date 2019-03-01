@@ -35,7 +35,7 @@ class IBISConsumer(WebsocketConsumer):
             node_type = data["node_type"]
             node_description = data["node_description"]
             parent_id = int(data["parent_id"])
-            theme_obj = Theme.objects.filter(pk=self.theme_id)[0]
+            theme_obj = Theme.objects.get(pk=self.theme_id)
             node_obj = Node(node_name=node_name, node_type=node_type, node_description=node_description,
                             theme=theme_obj)
             node_obj.save()
@@ -66,9 +66,8 @@ class IBISConsumer(WebsocketConsumer):
                 node_obj.node_description = node_description
                 node_obj.save()
 
-                parent_obj = NodeNode.objects.filter(child_node=node_obj)[0].parent_node
-
                 if LOD:
+                    parent_obj = node_obj.child.all()[0].parent_node
                     if parent_obj is None:
                         Virtuoso().updateNode(node_obj, None)
                     else:
@@ -79,7 +78,7 @@ class IBISConsumer(WebsocketConsumer):
 
     def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
-            theme_obj = Theme.objects.filter(pk=self.theme_id)[0]
+            theme_obj = Theme.objects.get(pk=self.theme_id)
             theme_obj.theme_name = data["name"]
             theme_obj.theme_description = data["description"]
             theme_obj.save()
@@ -152,7 +151,7 @@ class IBISConsumer(WebsocketConsumer):
         json_data["relevant"] = []
         json_data["children"] = []
 
-        relevant_info_list = RelevantInfo.objects.filter(node=parent_node)
+        relevant_info_list = parent_node.relevant_info.all()
         for relevant_info in relevant_info_list:
             relevant = {
                 "id": relevant_info.id,
@@ -161,7 +160,7 @@ class IBISConsumer(WebsocketConsumer):
             }
             json_data["relevant"].append(relevant)
 
-        node_relevant_list = NodeNode.objects.filter(parent_node=parent_node)
+        node_relevant_list = parent_node.parent.all()
         for nodenode in node_relevant_list:
             child_node = {}
             json_data["children"].append(child_node)
