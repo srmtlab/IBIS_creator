@@ -12,27 +12,29 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
     - mecab-python3
     - requests
     - django-debug-toolbar (for development)
-- Virtuoso
-    - IBIS CREATOR uses Virtuoso as RDF store
 - Redis
+- Virtuoso (optional)
+    - IBIS CREATOR uses Virtuoso as RDF store
+
 
 # Setup
 ```bash
+git clone https://github.com/srmtlab/IBIS_creator.git
+cd IBIS_creator
+pip install -r requirements/production.txt
 python3 SetUp.py
 ```
+
 Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
 - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
-- "LOD_RESOURCE"
-- "LOD_GRAPH_URI"
+- "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons.
+IBIS CREATOR can also be installed under a relative URL, for example http://example.com/IBIS_creator/
 
-## Build the app
+## migrate database
 ```bash
-git clone https://github.com/srmtlab/IBIS_creator.git
-cd IBIS_creator
-pip install -r requirements/production.txt
 python3 manage.py migrate --settings config.settings.production
 python3 manage.py makemigrations IBIS_creator --settings config.settings.production
 python3 manage.py migrate --settings config.settings.production
@@ -51,6 +53,7 @@ cd IBIS_creator
 pip install -r requirements/local.txt
 python3 SetUp.py
 ```
+
 Open `local_settings.json` and add `localhost` and `127.0.0.1` in "ALLOWED_HOSTS"
 ```json
 # example
