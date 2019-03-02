@@ -151,8 +151,7 @@ class IBISConsumer(WebsocketConsumer):
         json_data["relevant"] = []
         json_data["children"] = []
 
-        relevant_info_list = parent_node.relevant_info.all()
-        for relevant_info in relevant_info_list:
+        for relevant_info in parent_node.relevant_info.all():
             relevant = {
                 "id": relevant_info.id,
                 "url": relevant_info.relevant_url,
@@ -160,8 +159,7 @@ class IBISConsumer(WebsocketConsumer):
             }
             json_data["relevant"].append(relevant)
 
-        node_relevant_list = parent_node.parent.all()
-        for nodenode in node_relevant_list:
+        for nodenode in parent_node.parent.all():
             child_node = {}
             json_data["children"].append(child_node)
             self.make_json(nodenode.child_node, child_node)
