@@ -28,7 +28,7 @@ python3 SetUp.py
 Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
 - "BASE_URL" : It is recommended to install IBIS CREATOR in your own domain, but sometimes this is not impossible for some reasons. IBIS CREATOR can also be installed under a relative URL, for example `http://example.com/IBIS_creator/`
-- "LOD" : If you publish data in IBIS CREATOR, you should set this variable into true
+- "LOD" : If you publish data in IBIS CREATOR as Linked Open Data, you should set this variable as "true"
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
 - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
@@ -87,3 +87,4 @@ python3 manage.py runserver --settings config.settings.local
 - [議題の関連情報推薦によるIBIS構造作成支援システムの試作 ( 東海支部連合大会2018 )](https://www.jp-c.jp/rengo/www/cd/pdf/M3-4.pdf)
 - [Two Scoops of Django 1.11: Best Practices for the Django Web Framework (English Edition)](https://www.amazon.co.jp/dp/B076D5FKFX/)
 - [Issue-based information system (wikipedia)](https://en.wikipedia.org/wiki/Issue-based_information_system)
+- [Linked Open Data](https://ja.wikipedia.org/wiki/Linked_Open_Data)
