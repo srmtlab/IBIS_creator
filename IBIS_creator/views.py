@@ -15,7 +15,6 @@ from config.settings.base import BASE_URL
 from config.settings.base import LOD
 
 
-@ensure_csrf_cookie
 def make_theme(request):
     if request.method == "POST":
         theme = request.POST
