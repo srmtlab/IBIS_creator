@@ -71,7 +71,7 @@ def download_json(modeladmin, request, queryset):
 
 def download_ttl(modeladmin, request, queryset):
 
-    ttl_string = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n " \
+    ttl_string = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" \
                  "@prefix dct: <http://purl.org/dc/terms/> .\n\n"
 
     ontology = ONTOLOGY
@@ -89,7 +89,7 @@ def download_ttl(modeladmin, request, queryset):
         theme_obj = "<" + theme_resource_pref + str(theme.id) + ">"
         theme_name = '"' + theme.theme_name + '"@ja'
         theme_description = '"""' + theme.theme_description + '"""@ja'
-        rootNode_id = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme_id=theme.theme_id)[0] \
+        rootNode_id = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=theme.id)[0] \
             .child_node.id
         theme_rootNode = "<" + node_resource_pref + str(rootNode_id) + ">"
 

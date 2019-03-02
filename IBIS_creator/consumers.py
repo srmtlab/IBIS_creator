@@ -176,7 +176,7 @@ class IBISConsumer(WebsocketConsumer):
             if theme_queryset.exists():
                 theme = theme_queryset[0]
                 node_data = {}
-                parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme_id=self.theme_id)[0]\
+                parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0]\
                     .child_node
                 self.make_json(parent_node=parent_node, json_data=node_data)
 
