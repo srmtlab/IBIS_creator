@@ -25,7 +25,7 @@ pip install -r requirements/production.txt
 python3 SetUp.py
 ```
 
-Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"
+Open `local_settings.json` and modify below variable
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
 - "LOD" : If you publish data in IBIS CREATOR as Linked Open Data, you should set this variable as "true"
 - "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...),
