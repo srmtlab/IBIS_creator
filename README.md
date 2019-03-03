@@ -37,7 +37,6 @@ for example if you write `http://example.com` in this variable, this app's names
 
 ```json
 "ALLOWED_HOSTS": ["example.com","example.jp"],
-"LOD": true,
 ```
 
 ## migrate database
