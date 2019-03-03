@@ -36,8 +36,6 @@ Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and 
 
 ```json
 "ALLOWED_HOSTS": ["example.com","example.jp"]
-# not recommended
-"BASE_URL": "IBIS_creator"
 ```
 
 ## migrate database
