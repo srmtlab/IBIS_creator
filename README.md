@@ -28,14 +28,16 @@ python3 SetUp.py
 Open `local_settings.json` and modify the "ALLOWED_HOSTS", "VIRTUOSO_USER", and "VIRTUOSO_PASSWORD"
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
 - "LOD" : If you publish data in IBIS CREATOR as Linked Open Data, you should set this variable as "true"
-- "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...)
+- "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...),
+for example if you write `http://example.com` in this variable, this app's namespace is `http://example.com/resource/`
 - "LOD_GRAPH_URI" : URI to identify RDF graph
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
 - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
 
 ```json
-"ALLOWED_HOSTS": ["example.com","example.jp"]
+"ALLOWED_HOSTS": ["example.com","example.jp"],
+"LOD": true,
 ```
 
 ## migrate database
