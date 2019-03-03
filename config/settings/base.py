@@ -147,5 +147,5 @@ LOD_GRAPH_URI = get_secret("LOD_GRAPH_URI")
 ONTOLOGY = get_secret("ONTOLOGY")
 VIRTUOSO_UPDATE_ENDPOINT = get_secret("VIRTUOSO_UPDATE_ENDPOINT")
 
-BASE_URL = "" if len(get_secret("BASE_URL").strip()) == 0 else "/" + get_secret("BASE_URL")
+BASE_URL = ""
 LOD = get_secret("LOD")
