@@ -43,7 +43,7 @@ function create_theme() {
 
     document.createTheme.action = base_url + "/api/make_theme/";
     document.createTheme.submit();
-    
+
     $('#create_theme_modal').modal('hide');
 }
 
