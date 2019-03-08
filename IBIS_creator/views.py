@@ -1,10 +1,9 @@
 from django.http import HttpResponse
-from django.template import loader
 from django.http import Http404
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from .models import Theme
 from .models import Node
 from .models import RelevantInfo
@@ -59,26 +58,21 @@ def add_relevant_info(request, theme_id):
 
 @ensure_csrf_cookie
 def index(request):
-    template = loader.get_template('IBIS_creator/index.html')
     theme_list = Theme.objects.all().order_by("id").reverse()
     context = {
         'base_url': BASE_URL,
         'theme_list': theme_list
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'IBIS_creator/index.html', context)
 
 
 def show_theme(request, theme_id):
-    if Theme.objects.filter(pk=theme_id).exists():
-        template = loader.get_template('IBIS_creator/create_ibis.html')
-        theme = Theme.objects.get(pk=theme_id)
-        context = {
-            'base_url': BASE_URL,
-            'theme': theme
-        }
-        return HttpResponse(template.render(context, request))
-    else:
-        raise Http404("指定されたテーマは存在しません。")
+    theme = get_object_or_404(Theme, pk=theme_id)
+    context = {
+        'base_url': BASE_URL,
+        'theme': theme
+    }
+    return render(request, 'IBIS_creator/create_ibis.html', context)
 
 
 def search_relevant_info(request):
@@ -96,25 +90,20 @@ def ontology(request):
 
 
 def resource_theme_info(request, theme_id):
-    theme_queryset = Theme.objects.filter(pk=theme_id)
-    if theme_queryset.exists():
-        theme_obj = theme_queryset[0]
-
+    try:
+        theme_obj = Theme.objects.get(pk=theme_id)
         theme_json = '{ "id" : ' + str(theme_obj.id) \
                      + ' , "name" : "' + theme_obj.theme_name \
                      + '" , "description" : "' + theme_obj.theme_description \
                      + '" }'
-
-        return HttpResponse(theme_json, content_type="application/json")
-    else:
+    except Theme.DoesNotExist:
         return HttpResponse(False)
+    return HttpResponse(theme_json, content_type="application/json")
 
 
 def resource_node_info(request, node_id):
-    node_queryset = Node.objects.filter(pk=node_id)
-    if node_queryset.exists():
-        node_obj = node_queryset[0]
-
+    try:
+        node_obj = Node.objects.get(pk=node_id)
         if len(node_obj.node_description.strip()) != 0:
             node_json = '{ "id" : ' + str(node_obj.id) \
                         + ' , "name" : "' + node_obj.node_name \
@@ -126,21 +115,18 @@ def resource_node_info(request, node_id):
                         + ' , "name" : "' + node_obj.node_name \
                         + '" , "type" : "' + node_obj.node_type \
                         + '" }'
-
-        return HttpResponse(node_json, content_type="application/json")
-    else:
+    except Node.DoesNotExist:
         return HttpResponse(False)
+    return HttpResponse(node_json, content_type="application/json")
 
 
 def resource_relevant_info(request, relevant_id):
-    relevant_info_queryset = RelevantInfo.objects.filter(pk=relevant_id)
-    if relevant_info_queryset.exists():
-        relevant_info_obj = relevant_info_queryset[0]
+    try:
+        relevant_info_obj = RelevantInfo.objects.get(pk=relevant_id)
         relevant_json = '{ "id" : ' + str(relevant_info_obj.id)\
                         + ' , "url" : "' + relevant_info_obj.relevant_url \
                         + '", "title" : "' + relevant_info_obj.relevant_title \
                         + '" }'
-
-        return HttpResponse(relevant_json, content_type="application/json")
-    else:
+    except RelevantInfo.DoesNotExist:
         return HttpResponse(False)
+    return HttpResponse(relevant_json, content_type="application/json")
