@@ -57,10 +57,9 @@ class IBISConsumer(WebsocketConsumer):
             node_name = data["node_name"]
             node_type = data["node_type"]
             node_description = data["node_description"]
-            node_queryset = Node.objects.filter(pk=node_id)
 
-            if node_queryset.exists():
-                node_obj = node_queryset[0]
+            try:
+                node_obj = Node.objects.get(pk=node_id)
                 node_obj.node_name = node_name
                 node_obj.node_type = node_type
                 node_obj.node_description = node_description
@@ -72,9 +71,9 @@ class IBISConsumer(WebsocketConsumer):
                         Virtuoso().updateNode(node_obj, None)
                     else:
                         Virtuoso().updateNode(node_obj, parent_obj.id)
-                return True
-            else:
+            except Node.DoesNotExist:
                 return False
+            return True
 
     def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
@@ -93,9 +92,8 @@ class IBISConsumer(WebsocketConsumer):
             node_id = int(data["node_id"])
             relevant_url = data["relevant_url"]
             relevant_title = data["relevant_title"]
-            node_queryset = Node.objects.filter(pk=node_id)
-            if node_queryset.exists():
-                node_obj = node_queryset[0]
+            try:
+                node_obj = Node.objects.get(pk=node_id)
                 relevant_info_obj = RelevantInfo(relevant_url=relevant_url,
                                                  relevant_title=relevant_title,
                                                  node=node_obj)
@@ -103,9 +101,9 @@ class IBISConsumer(WebsocketConsumer):
                 data["relevant_id"] = relevant_info_obj.id
                 if LOD:
                     Virtuoso().addRelevantInfo(relevant_info_obj)
-                return True
-            else:
+            except Node.DoesNotExist:
                 return False
+            return True
         elif data_operation == "delete":
             delete_index = int(data["relevant_id"])
             relevant_info_queryset = RelevantInfo.objects.filter(pk=delete_index)
@@ -120,17 +118,17 @@ class IBISConsumer(WebsocketConsumer):
             edit_index = int(data["relevant_id"])
             relevant_url = data["relevant_url"]
             relevant_title = data["relevant_title"]
-            relevant_info_queryset = RelevantInfo.objects.filter(pk=edit_index)
-            if relevant_info_queryset.exists():
-                relevant_info_obj = relevant_info_queryset[0]
+
+            try:
+                relevant_info_obj = RelevantInfo.objects.get(pk=edit_index)
                 relevant_info_obj.relevant_url = relevant_url
                 relevant_info_obj.relevant_title = relevant_title
                 relevant_info_obj.save()
                 if LOD:
                     Virtuoso().updateRelevantInfo(relevant_info_obj)
-                return True
-            else:
+            except RelevantInfo.DoesNotExist:
                 return False
+            return True
 
     def renew_database(self, data_type, data_operation, data):
         save_flag = False
@@ -170,9 +168,8 @@ class IBISConsumer(WebsocketConsumer):
         status = text_data_json['status']
 
         if status == "init":
-            theme_queryset = Theme.objects.filter(pk=self.theme_id)
-            if theme_queryset.exists():
-                theme = theme_queryset[0]
+            try:
+                theme = Theme.objects.get(pk=self.theme_id)
                 node_data = {}
                 parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0]\
                     .child_node
@@ -193,6 +190,8 @@ class IBISConsumer(WebsocketConsumer):
                         }
                     }
                 )
+            except Theme.DoesNotExist:
+                pass
         elif status == "work":
             data_type = text_data_json["type"]
             data_operation = text_data_json["operation"]
