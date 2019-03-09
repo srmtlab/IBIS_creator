@@ -228,20 +228,21 @@ function update(source, move_flag = false) {
             function (d) {
                 let type = d.data.type;
                 if(type === "Issue"){
-                    return "../../img/create_ibis/operator/issue.png";
+                    return static_url + "img/create_ibis/operator/issue.png";
                 }else if(type === "Idea"){
-                    return "../../img/create_ibis/operator/idea.png";
+                    return static_url + "img/create_ibis/operator/idea.png";
                 }else if(type === "Merit"){
-                    return "../../img/create_ibis/operator/merit.png";
+                    return static_url + "img/create_ibis/operator/merit.png";
                 }else if (type === "Demerit"){
-                    return "../../img/create_ibis/operator/demerit.png";
+                    return static_url + "img/create_ibis/operator/demerit.png";
                 }else if (type === "Example"){
-                    return "../../img/create_ibis/operator/example.png";
+                    return static_url + "img/create_ibis/operator/example.png";
                 }else if (type === "Reason"){
-                    return "../../img/create_ibis/operator/reason.png";
+                    return static_url + "img/create_ibis/operator/reason.png";
                 }else if (type === "Opinion"){
-                    return "../../img/create_ibis/operator/opinion.png";
-                }}
+                    return static_url + "img/create_ibis/operator/opinion.png";
+                }
+            }
         )
         .attr("x", - (circle_range / 2))
         .attr("y", - (circle_range / 2))
@@ -260,7 +261,7 @@ function update(source, move_flag = false) {
         .attr("xlink:href",
             function (d) {
                 if(d.parent !== null){
-                    return "../../img/create_ibis/operator/delete.png";
+                    return  static_url + "img/create_ibis/operator/delete.png";
                 }
             }
         )
@@ -272,7 +273,7 @@ function update(source, move_flag = false) {
     nodeUpdate.select(".add_img")
         .attr("xlink:href",
             function (d) {
-                return "../../img/create_ibis/operator/add.png";
+                return static_url + "img/create_ibis/operator/add.png";
             }
         )
         .attr("x", circle_range/5)
@@ -283,7 +284,7 @@ function update(source, move_flag = false) {
     nodeUpdate.select(".edit_img")
         .attr("xlink:href",
             function (d) {
-                return "../../img/create_ibis/operator/edit.png";
+                return static_url + "img/create_ibis/operator/edit.png";
             }
         )
         .attr("x", -(circle_range/2))
@@ -294,7 +295,7 @@ function update(source, move_flag = false) {
     nodeUpdate.select(".relevant_info_img")
         .attr("xlink:href",
             function (d) {
-                return "../../img/create_ibis/operator/relevant_info.png";
+                return static_url + "img/create_ibis/operator/relevant_info.png";
             }
         )
         .attr("x", -(circle_range/2))

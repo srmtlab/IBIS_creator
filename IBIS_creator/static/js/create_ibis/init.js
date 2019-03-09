@@ -139,9 +139,7 @@ window.addEventListener("resize", resize_ibis);
 window.onload = function () {
     resize_ibis();
 
-    //let theme_url = base_url + "/api/theme/" + theme_id + "/";
-    //let node_url = base_url + "/api/theme/" + theme_id + "/node/";
-    let websocket_url = "ws://" + location.host + base_url + "/ws/theme/" + theme_id + "/";
+    let websocket_url = "ws://" + location.host + "/ws/theme/" + theme_id + "/";
 
     init_data(websocket_url);
 
