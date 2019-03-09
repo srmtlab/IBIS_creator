@@ -21,6 +21,9 @@ def make_theme(request):
         try:
             theme_name = theme["name"]
             theme_description = theme["description"]
+        except KeyError:
+            return HttpResponseBadRequest("不正なリクエストです")
+        else:
             theme_obj = Theme(theme_name=theme_name, theme_description=theme_description)
             theme_obj.save()
             node_obj = Node(node_name=theme_name, node_type="Issue", node_description=theme_description,
@@ -31,8 +34,6 @@ def make_theme(request):
                 Virtuoso().makeTheme(theme_obj, node_obj)
                 Virtuoso().addNode(node_obj, None)
             return redirect(reverse('IBIS_creator:show_theme', args=theme_obj.id))
-        except KeyError:
-            return HttpResponseBadRequest("不正なリクエストです")
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -87,9 +88,10 @@ def search_relevant_info(request):
     if request.method == "GET":
         try:
             query = request.GET.get(key="q")
-            return JsonResponse(search(query))
         except KeyError:
             return HttpResponseBadRequest("パラメータに誤りが有ります")
+        else:
+            return JsonResponse(search(query))
     else:
         return HttpResponseNotAllowed(['GET'])
 

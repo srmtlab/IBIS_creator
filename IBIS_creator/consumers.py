@@ -73,7 +73,8 @@ class IBISConsumer(WebsocketConsumer):
                         Virtuoso().updateNode(node_obj, parent_obj.id)
             except Node.DoesNotExist:
                 return False
-            return True
+            else:
+                return True
 
     def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
@@ -103,7 +104,8 @@ class IBISConsumer(WebsocketConsumer):
                     Virtuoso().addRelevantInfo(relevant_info_obj)
             except Node.DoesNotExist:
                 return False
-            return True
+            else:
+                return True
         elif data_operation == "delete":
             delete_index = int(data["relevant_id"])
             relevant_info_queryset = RelevantInfo.objects.filter(pk=delete_index)
@@ -118,7 +120,6 @@ class IBISConsumer(WebsocketConsumer):
             edit_index = int(data["relevant_id"])
             relevant_url = data["relevant_url"]
             relevant_title = data["relevant_title"]
-
             try:
                 relevant_info_obj = RelevantInfo.objects.get(pk=edit_index)
                 relevant_info_obj.relevant_url = relevant_url
@@ -128,7 +129,8 @@ class IBISConsumer(WebsocketConsumer):
                     Virtuoso().updateRelevantInfo(relevant_info_obj)
             except RelevantInfo.DoesNotExist:
                 return False
-            return True
+            else:
+                return True
 
     def renew_database(self, data_type, data_operation, data):
         save_flag = False
@@ -165,53 +167,59 @@ class IBISConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        status = text_data_json['status']
+        try:
+            status = text_data_json['status']
+        except KeyError:
+            pass
+        else:
+            if status == "init":
+                try:
+                    theme = Theme.objects.get(pk=self.theme_id)
+                except Theme.DoesNotExist:
+                    pass
+                else:
+                    node_data = {}
+                    parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0]\
+                        .child_node
+                    self.make_json(parent_node=parent_node, json_data=node_data)
 
-        if status == "init":
-            try:
-                theme = Theme.objects.get(pk=self.theme_id)
-                node_data = {}
-                parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0]\
-                    .child_node
-                self.make_json(parent_node=parent_node, json_data=node_data)
-
-                # クライアントが，WebSocket通信を始めた瞬間であれば
-                async_to_sync(self.channel_layer.group_send)(
-                    self.theme_name,
-                    {
-                        'type': 'send_ibis',
-                        'send_data': {
-                            'status': 'init',
-                            'theme': {
-                                'name': theme.theme_name,
-                                'description': theme.theme_description
-                            },
-                            'node': node_data
+                    # クライアントが，WebSocket通信を始めた瞬間であれば
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.theme_name,
+                        {
+                            'type': 'send_ibis',
+                            'send_data': {
+                                'status': 'init',
+                                'theme': {
+                                    'name': theme.theme_name,
+                                    'description': theme.theme_description
+                                },
+                                'node': node_data
+                            }
                         }
-                    }
-                )
-            except Theme.DoesNotExist:
-                pass
-        elif status == "work":
-            data_type = text_data_json["type"]
-            data_operation = text_data_json["operation"]
-            data = text_data_json["data"]
-
-            save_flag = self.renew_database(data_type=data_type, data_operation=data_operation, data=data)
-
-            if save_flag:
-                async_to_sync(self.channel_layer.group_send)(
-                    self.theme_name,
-                    {
-                        'type': 'send_ibis',
-                        'send_data': {
-                            'status': 'work',
-                            'type': data_type,
-                            'operation': data_operation,
-                            'data': data
-                        }
-                    }
-                )
+                    )
+            elif status == "work":
+                try:
+                    data_type = text_data_json["type"]
+                    data_operation = text_data_json["operation"]
+                    data = text_data_json["data"]
+                except KeyError:
+                    pass
+                else:
+                    save_flag = self.renew_database(data_type=data_type, data_operation=data_operation, data=data)
+                    if save_flag:
+                        async_to_sync(self.channel_layer.group_send)(
+                            self.theme_name,
+                            {
+                                'type': 'send_ibis',
+                                'send_data': {
+                                    'status': 'work',
+                                    'type': data_type,
+                                    'operation': data_operation,
+                                    'data': data
+                                }
+                            }
+                        )
 
     def send_ibis(self, event):
         self.send(text_data=json.dumps(event['send_data']))
