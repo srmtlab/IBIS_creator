@@ -41,7 +41,7 @@ function create_theme() {
         return;
     }
 
-    document.createTheme.action = base_url + "/api/make_theme/";
+    document.createTheme.action = "/api/make_theme/";
     document.createTheme.submit();
 
     $('#create_theme_modal').modal('hide');

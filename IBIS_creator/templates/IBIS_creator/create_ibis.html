@@ -7,16 +7,16 @@
     <meta name="keywords" content="白松研究室,LODチャレンジ,IBIS CREATOR,{{ theme.theme_name }}">
     <meta name="author" content="白松研究室">
     <title>{{ theme.theme_name }}</title>
-    <link rel="icon" type="image/png" href="{{ base_url }}{% static "img/IBIS_creator_favicon.png"%}">
+    <link rel="icon" type="image/png" href="{% static "img/IBIS_creator_favicon.png"%}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous" />
-    <link rel="stylesheet" type="text/css" media="all" href="{{ base_url }}{% static "css/create_ibis/creator.css"%}">
+    <link rel="stylesheet" type="text/css" media="all" href="{% static "css/create_ibis/creator.css"%}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js" integrity="sha256-va1Vhe+all/yVFhzgwmwBgWMVfLHjXlNJfvsrjUBRgk=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/operator.js" %}"></script>
-    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/ibis_visualize.js"%}"></script>
-    <script type="text/javascript" src="{{ base_url }}{% static "js/create_ibis/init.js"%}"></script>
+    <script type="text/javascript" src="{% static "js/create_ibis/operator.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/create_ibis/ibis_visualize.js"%}"></script>
+    <script type="text/javascript" src="{% static "js/create_ibis/init.js"%}"></script>
 </head>
 <body>
 
@@ -29,7 +29,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="{{ base_url }}/">IBIS CREATOR<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link active" href="/">IBIS CREATOR<span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" onclick="show_edit_theme()" href="#">テーマ編集</a>
                 <a class="nav-item nav-link" href="#">共有</a>
                 <a class="nav-item nav-link" target="_blank" href="http://idea.linkdata.org/idea/idea1s2697i">ヘルプ</a>
@@ -289,8 +289,7 @@
 
 <script type="text/javascript">
     let theme_id = {{ theme.id }};
-    let base_url = "{{ base_url }}";
-    let static_url = "{{ base_url }}{% static "/" %}";
+    let static_url = "{% static "/" %}";
 </script>
 </body>
 </html>

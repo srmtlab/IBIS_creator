@@ -10,7 +10,6 @@ from .models import RelevantInfo
 from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
-from config.settings.base import BASE_URL
 from config.settings.base import LOD
 
 
@@ -60,7 +59,6 @@ def add_relevant_info(request, theme_id):
 def index(request):
     theme_list = Theme.objects.all().order_by("id").reverse()
     context = {
-        'base_url': BASE_URL,
         'theme_list': theme_list
     }
     return render(request, 'IBIS_creator/index.html', context)
@@ -69,7 +67,6 @@ def index(request):
 def show_theme(request, theme_id):
     theme = get_object_or_404(Theme, pk=theme_id)
     context = {
-        'base_url': BASE_URL,
         'theme': theme
     }
     return render(request, 'IBIS_creator/create_ibis.html', context)
