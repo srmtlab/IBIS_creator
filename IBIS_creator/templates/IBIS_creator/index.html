@@ -62,7 +62,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="createTheme" method="post">
+                <form name="createTheme" method="post" action="{% url 'IBIS_creator:make_theme' %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="create-theme-name" class="col-form-label">テーマ名 <span style="color: red">(必須)</span></label>
