@@ -31,20 +31,23 @@ class IBISConsumer(WebsocketConsumer):
 
     def renew_node_database(self, data_operation, data):
         if data_operation == "add":
-            node_name = data["node_name"]
-            node_type = data["node_type"]
-            node_description = data["node_description"]
-            parent_id = int(data["parent_id"])
-            theme_obj = Theme.objects.get(pk=self.theme_id)
-            node_obj = Node(node_name=node_name, node_type=node_type, node_description=node_description,
-                            theme=theme_obj)
-            node_obj.save()
-            NodeNode(parent_node=Node.objects.filter(pk=parent_id)[0], child_node=node_obj).save()
-            data["node_id"] = node_obj.id
-            if LOD:
-                Virtuoso().addNode(node_obj, parent_id)
-            return True
-
+            try:
+                node_name = data["node_name"]
+                node_type = data["node_type"]
+                node_description = data["node_description"]
+                parent_id = int(data["parent_id"])
+            except KeyError:
+                return False
+            else:
+                theme_obj = Theme.objects.get(pk=self.theme_id)
+                node_obj = Node(node_name=node_name, node_type=node_type, node_description=node_description,
+                                theme=theme_obj)
+                node_obj.save()
+                NodeNode(parent_node=Node.objects.filter(pk=parent_id)[0], child_node=node_obj).save()
+                data["node_id"] = node_obj.id
+                if LOD:
+                    Virtuoso().addNode(node_obj, parent_id)
+                return True
         elif data_operation == "delete":
             node_id = int(data["node_id"])
             Node.objects.filter(pk=node_id).delete()
@@ -53,38 +56,45 @@ class IBISConsumer(WebsocketConsumer):
             return True
 
         elif data_operation == "edit":
-            node_id = int(data["node_id"])
-            node_name = data["node_name"]
-            node_type = data["node_type"]
-            node_description = data["node_description"]
-
             try:
-                node_obj = Node.objects.get(pk=node_id)
-                node_obj.node_name = node_name
-                node_obj.node_type = node_type
-                node_obj.node_description = node_description
-                node_obj.save()
-
-                if LOD:
-                    parent_obj = node_obj.child.all()[0].parent_node
-                    if parent_obj is None:
-                        Virtuoso().updateNode(node_obj, None)
-                    else:
-                        Virtuoso().updateNode(node_obj, parent_obj.id)
-            except Node.DoesNotExist:
+                node_id = int(data["node_id"])
+                node_name = data["node_name"]
+                node_type = data["node_type"]
+                node_description = data["node_description"]
+            except (KeyError, ValueError):
                 return False
             else:
-                return True
+                try:
+                    node_obj = Node.objects.get(pk=node_id)
+                    node_obj.node_name = node_name
+                    node_obj.node_type = node_type
+                    node_obj.node_description = node_description
+                    node_obj.save()
+
+                    if LOD:
+                        parent_obj = node_obj.child.all()[0].parent_node
+                        if parent_obj is None:
+                            Virtuoso().updateNode(node_obj, None)
+                        else:
+                            Virtuoso().updateNode(node_obj, parent_obj.id)
+                except Node.DoesNotExist:
+                    return False
+                else:
+                    return True
 
     def renew_theme_database(self, data_operation, data):
         if data_operation == "edit":
             theme_obj = Theme.objects.get(pk=self.theme_id)
-            theme_obj.theme_name = data["name"]
-            theme_obj.theme_description = data["description"]
-            theme_obj.save()
-            if LOD:
-                Virtuoso().updateTheme(theme_obj)
-            return True
+            try:
+                theme_obj.theme_name = data["name"]
+                theme_obj.theme_description = data["description"]
+            except KeyError:
+                return False
+            else:
+                theme_obj.save()
+                if LOD:
+                    Virtuoso().updateTheme(theme_obj)
+                return True
         else:
             return False
 
@@ -107,30 +117,34 @@ class IBISConsumer(WebsocketConsumer):
             else:
                 return True
         elif data_operation == "delete":
-            delete_index = int(data["relevant_id"])
-            relevant_info_queryset = RelevantInfo.objects.filter(pk=delete_index)
-            if relevant_info_queryset.exists():
-                relevant_info_queryset.delete()
+            try:
+                delete_index = int(data["relevant_id"])
+            except (KeyError, ValueError):
+                return False
+            else:
+                RelevantInfo.objects.filter(pk=delete_index).delete()
                 if LOD:
                     Virtuoso().delRelevantInfo(delete_index)
                 return True
-            else:
-                return False
         elif data_operation == "edit":
-            edit_index = int(data["relevant_id"])
-            relevant_url = data["relevant_url"]
-            relevant_title = data["relevant_title"]
             try:
-                relevant_info_obj = RelevantInfo.objects.get(pk=edit_index)
-                relevant_info_obj.relevant_url = relevant_url
-                relevant_info_obj.relevant_title = relevant_title
-                relevant_info_obj.save()
-                if LOD:
-                    Virtuoso().updateRelevantInfo(relevant_info_obj)
-            except RelevantInfo.DoesNotExist:
+                edit_index = int(data["relevant_id"])
+                relevant_url = data["relevant_url"]
+                relevant_title = data["relevant_title"]
+            except (KeyError, ValueError):
                 return False
             else:
-                return True
+                try:
+                    relevant_info_obj = RelevantInfo.objects.get(pk=edit_index)
+                    relevant_info_obj.relevant_url = relevant_url
+                    relevant_info_obj.relevant_title = relevant_title
+                    relevant_info_obj.save()
+                    if LOD:
+                        Virtuoso().updateRelevantInfo(relevant_info_obj)
+                except RelevantInfo.DoesNotExist:
+                    return False
+                else:
+                    return True
 
     def renew_database(self, data_type, data_operation, data):
         save_flag = False
