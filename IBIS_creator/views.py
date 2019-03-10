@@ -33,7 +33,7 @@ def make_theme(request):
             if LOD:
                 Virtuoso().makeTheme(theme_obj, node_obj)
                 Virtuoso().addNode(node_obj, None)
-            return redirect(reverse('IBIS_creator:show_theme', args=theme_obj.id))
+            return redirect(reverse('IBIS_creator:show_theme', args=[theme_obj.id]))
     else:
         return HttpResponseNotAllowed(['POST'])
 

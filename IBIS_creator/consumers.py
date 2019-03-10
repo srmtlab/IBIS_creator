@@ -207,8 +207,6 @@ class IBISConsumer(WebsocketConsumer):
                 except Theme.DoesNotExist:
                     pass
                 else:
-                    print("pass")
-                    print(self.make_json())
                     # クライアントが，WebSocket通信を始めた瞬間であれば
                     async_to_sync(self.channel_layer.group_send)(
                         self.theme_name,
