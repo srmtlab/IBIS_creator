@@ -33,6 +33,8 @@ def download_json(modeladmin, request, queryset):
             "Node": {
                 "nodes": [],
                 "relevant_info": [],
+                "rootNode_id": NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=theme_obj.id)[0]
+                    .child_node.id
             },
         }
         json_node_data = json_data["Node"]

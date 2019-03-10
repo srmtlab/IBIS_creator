@@ -54,7 +54,6 @@ class IBISConsumer(WebsocketConsumer):
             if LOD:
                 Virtuoso().delNode(node_id)
             return True
-
         elif data_operation == "edit":
             try:
                 node_id = int(data["node_id"])
@@ -157,26 +156,42 @@ class IBISConsumer(WebsocketConsumer):
                 save_flag = self.renew_relevant_info_database(data_operation, data)
         return save_flag
 
-    def make_json(self, parent_node, json_data):
-        json_data["id"] = parent_node.id
-        json_data["name"] = parent_node.node_name
-        json_data["type"] = parent_node.node_type
-        json_data["description"] = parent_node.node_description
-        json_data["relevant"] = []
-        json_data["children"] = []
+    def make_json(self):
+        root_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0] \
+            .child_node
+        node_dic = {}
+        stack_nodes = [root_node]
 
-        for relevant_info in parent_node.relevant_info.all():
-            relevant = {
-                "id": relevant_info.id,
-                "url": relevant_info.relevant_url,
-                "title": relevant_info.relevant_title
+        while(len(stack_nodes) > 0):
+            node = stack_nodes.pop()
+
+            node_data = {
+                "id": node.id,
+                "name": node.node_name,
+                "type": node.node_type,
+                "description": node.node_description,
+                "relevant": [],
+                "children": [],
             }
-            json_data["relevant"].append(relevant)
 
-        for nodenode in parent_node.parent.all():
-            child_node = {}
-            json_data["children"].append(child_node)
-            self.make_json(nodenode.child_node, child_node)
+            for relevant_info in node.relevant_info.all():
+                relevant = {
+                    "id": relevant_info.id,
+                    "url": relevant_info.relevant_url,
+                    "title": relevant_info.relevant_title
+                }
+                node_data["relevant"].append(relevant)
+
+            node_dic[node.id] = node_data
+            parent_node = NodeNode.objects.get(child_node=node).parent_node
+            if parent_node:
+                node_dic[parent_node.id]["children"].append(node_data)
+
+            for nodenode in node.parent.all():
+                stack_nodes.append(nodenode.child_node)
+
+        return node_dic[root_node.id]
+
 
     # Receive message from WebSocket
     def receive(self, text_data=None, bytes_data=None):
@@ -192,11 +207,8 @@ class IBISConsumer(WebsocketConsumer):
                 except Theme.DoesNotExist:
                     pass
                 else:
-                    node_data = {}
-                    parent_node = NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=self.theme_id)[0]\
-                        .child_node
-                    self.make_json(parent_node=parent_node, json_data=node_data)
-
+                    print("pass")
+                    print(self.make_json())
                     # クライアントが，WebSocket通信を始めた瞬間であれば
                     async_to_sync(self.channel_layer.group_send)(
                         self.theme_name,
@@ -208,7 +220,7 @@ class IBISConsumer(WebsocketConsumer):
                                     'name': theme.theme_name,
                                     'description': theme.theme_description
                                 },
-                                'node': node_data
+                                'node': self.make_json()
                             }
                         }
                     )
