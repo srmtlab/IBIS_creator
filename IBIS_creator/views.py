@@ -35,7 +35,8 @@ def make_theme(request):
                 Virtuoso().addNode(node_obj, None)
             return redirect(reverse('IBIS_creator:show_theme', args=[theme_obj.id]))
     else:
-        return HttpResponseNotAllowed(['POST'])
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['POST'], message)
 
 
 """
@@ -70,9 +71,11 @@ def index(request):
         }
         return render(request, 'IBIS_creator/index.html', context)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
+@csrf_exempt
 def show_theme(request, theme_id):
     if request.method == "GET":
         theme = get_object_or_404(Theme, pk=theme_id)
@@ -81,19 +84,21 @@ def show_theme(request, theme_id):
         }
         return render(request, 'IBIS_creator/create_ibis.html', context)
     else:
-        return HttpResponseNotAllowed(['GET'])
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def search_relevant_info(request):
     if request.method == "GET":
         try:
-            query = request.GET.get(key="q")
+            query = request.GET["q"]
         except KeyError:
             return HttpResponseBadRequest("パラメータに誤りが有ります")
         else:
             return JsonResponse(search(query))
     else:
-        return HttpResponseNotAllowed(['GET'])
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def ontology(request):
@@ -102,7 +107,8 @@ def ontology(request):
             ontology_str = f.read()
         return HttpResponse(ontology_str, content_type="text/turtle; charset=utf-8")
     else:
-        return HttpResponseNotAllowed(['GET'])
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def resource_theme_info(request, theme_id):
