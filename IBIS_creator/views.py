@@ -62,7 +62,6 @@ def add_relevant_info(request, theme_id):
 """
 
 
-@ensure_csrf_cookie
 def index(request):
     if request.method == "GET":
         theme_list = Theme.objects.all().order_by("id").reverse()
@@ -75,7 +74,6 @@ def index(request):
         return HttpResponseNotAllowed(['GET'], message)
 
 
-@csrf_exempt
 def show_theme(request, theme_id):
     if request.method == "GET":
         theme = get_object_or_404(Theme, pk=theme_id)
