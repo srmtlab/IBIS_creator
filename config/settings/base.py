@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'IBIS_creator.apps.IbisCreatorConfig',
     'channels',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

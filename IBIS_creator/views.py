@@ -1,11 +1,13 @@
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseBadRequest
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
+from rest_framework import viewsets, routers
+from .serializer import ThemeSerializer
+from .serializer import NodeSerializer
+from .serializer import RelevantInfoSerializer
 from .models import Theme
 from .models import Node
 from .models import RelevantInfo
@@ -37,29 +39,6 @@ def make_theme(request):
     else:
         message = request.method + "は許可されていないメソッドタイプです"
         return HttpResponseNotAllowed(['POST'], message)
-
-
-"""
-@csrf_exempt
-def add_relevant_info(request, theme_id):
-    if request.method == "POST":
-        relevant_info = request.POST
-        node_id = int(relevant_info["node_id"])
-        relevant_url = relevant_info["relevant_url"]
-        relevant_title = relevant_info["relevant_title"]
-        node_queryset = Node.objects.filter(pk=node_id)
-        if node_queryset.exists():
-            node_obj = node_queryset[0]
-            relevant_info_obj = RelevantInfo(relevant_url=relevant_url,
-                                             relevant_title=relevant_title,
-                                             node=node_obj)
-            relevant_info_obj.save()
-            Virtuoso().addRelevantInfo(relevant_info_obj)
-            return HttpResponse(relevant_info_obj.id)
-        raise Http404()
-    else:
-        raise Http404()
-"""
 
 
 def index(request):
@@ -112,9 +91,9 @@ def ontology(request):
 def resource_theme_info(request, theme_id):
     try:
         theme_obj = Theme.objects.get(pk=theme_id)
-        theme_json = '{ "id" : ' + str(theme_obj.id) \
-                     + ' , "name" : "' + theme_obj.theme_name \
-                     + '" , "description" : "' + theme_obj.theme_description \
+        theme_json = '{ "theme_id" : ' + str(theme_obj.id) \
+                     + ' , "theme_name" : "' + theme_obj.theme_name \
+                     + '" , "theme_description" : "' + theme_obj.theme_description \
                      + '" }'
     except Theme.DoesNotExist:
         return HttpResponse("{}", content_type="application/json")
@@ -126,15 +105,15 @@ def resource_node_info(request, node_id):
     try:
         node_obj = Node.objects.get(pk=node_id)
         if len(node_obj.node_description.strip()) != 0:
-            node_json = '{ "id" : ' + str(node_obj.id) \
-                        + ' , "name" : "' + node_obj.node_name \
-                        + '" , "type" : "' + node_obj.node_type \
-                        + '" , "description" : "' + node_obj.node_description \
+            node_json = '{ "node_id" : ' + str(node_obj.id) \
+                        + ' , "node_name" : "' + node_obj.node_name \
+                        + '" , "node_type" : "' + node_obj.node_type \
+                        + '" , "node_description" : "' + node_obj.node_description \
                         + '" }'
         else:
-            node_json = '{ "id" : ' + node_obj.id \
-                        + ' , "name" : "' + node_obj.node_name \
-                        + '" , "type" : "' + node_obj.node_type \
+            node_json = '{ "node_id" : ' + node_obj.id \
+                        + ' , "node_name" : "' + node_obj.node_name \
+                        + '" , "node_type" : "' + node_obj.node_type \
                         + '" }'
     except Node.DoesNotExist:
         return HttpResponse("{}", content_type="application/json")
@@ -145,11 +124,32 @@ def resource_node_info(request, node_id):
 def resource_relevant_info(request, relevant_id):
     try:
         relevant_info_obj = RelevantInfo.objects.get(pk=relevant_id)
-        relevant_json = '{ "id" : ' + str(relevant_info_obj.id)\
-                        + ' , "url" : "' + relevant_info_obj.relevant_url \
-                        + '", "title" : "' + relevant_info_obj.relevant_title \
+        relevant_json = '{ "relevant_info_id" : ' + str(relevant_info_obj.id) \
+                        + ' , "relevant_info_url" : "' + relevant_info_obj.relevant_url \
+                        + '", "relevant_info_title" : "' + relevant_info_obj.relevant_title \
                         + '" }'
     except RelevantInfo.DoesNotExist:
         return HttpResponse("{}", content_type="application/json")
     else:
         return HttpResponse(relevant_json, content_type="application/json")
+
+
+class ThemeViewSet(viewsets.ModelViewSet):
+    queryset = Theme.objects.all()
+    serializer_class = ThemeSerializer
+
+
+class NodeViewSet(viewsets.ModelViewSet):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+
+
+class RelevantInfoViewSet(viewsets.ModelViewSet):
+    queryset = RelevantInfo.objects.all()
+    serializer_class = RelevantInfoSerializer
+
+
+router = routers.DefaultRouter()
+router.register('themes', ThemeViewSet)
+router.register('nodes', NodeViewSet)
+router.register('relevant_infos', RelevantInfoViewSet)

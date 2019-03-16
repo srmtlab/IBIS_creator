@@ -345,7 +345,7 @@ function show_relevant_info(d) {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: "/api/relevant/search/?q=" + query
+        url: "/relevant_info_search/?q=" + query
     }).done(function(d){
         // if data sending is successful
         if(d.query.length !== 0){

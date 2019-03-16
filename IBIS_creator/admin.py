@@ -26,13 +26,13 @@ def download_json(modeladmin, request, queryset):
 
         json_data = {
             "Theme": {
-                "id": theme_obj.id,
-                "name": theme_obj.theme_name,
-                "description": theme_obj.theme_description
+                "theme_id": theme_obj.id,
+                "theme_name": theme_obj.theme_name,
+                "theme_description": theme_obj.theme_description
             },
             "Node": {
                 "nodes": [],
-                "relevant_info": [],
+                "relevant_infos": [],
                 "rootNode_id": NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=theme_obj.id)[0]
                     .child_node.id
             },
@@ -40,26 +40,26 @@ def download_json(modeladmin, request, queryset):
         json_node_data = json_data["Node"]
         for node in theme_obj.nodes.all():
             node_data = {
-                "id": node.id,
-                "name": node.node_name,
-                "type": node.node_type,
-                "description": node.node_description,
-                "child_node_id": [],
-                "relevant_info_id": [],
+                "node_id": node.id,
+                "node_name": node.node_name,
+                "node_type": node.node_type,
+                "node_description": node.node_description,
+                "child_nodes_id": [],
+                "relevant_infos_id": [],
             }
             json_node_data["nodes"].append(node_data)
 
             for nodenode in node.parent.all():
-                node_data["child_node_id"].append(nodenode.child_node.id)
+                node_data["child_nodes_id"].append(nodenode.child_node.id)
 
             for relevant_info in node.relevant_info.all():
                 relevant_info_data = {
-                    "id": relevant_info.id,
-                    "url": relevant_info.relevant_url,
-                    "title": relevant_info.relevant_title
+                    "relevant_info_id": relevant_info.id,
+                    "relevant_info_url": relevant_info.relevant_url,
+                    "relevant_info_title": relevant_info.relevant_title
                 }
-                json_node_data["relevant_info"].append(relevant_info_data)
-                node_data["relevant_info_id"].append(relevant_info.id)
+                json_node_data["relevant_infos"].append(relevant_info_data)
+                node_data["relevant_infos_id"].append(relevant_info.id)
 
         json_data = json.dumps(json_data, ensure_ascii=False, indent='\t')
         zip_file.writestr(zinfo_or_arcname=filename, data=json_data)
@@ -71,14 +71,13 @@ def download_json(modeladmin, request, queryset):
 
 
 def download_ttl(modeladmin, request, queryset):
-
     ttl_string = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" \
                  "@prefix dct: <http://purl.org/dc/terms/> .\n\n"
 
     ontology = ONTOLOGY
-    theme_resource_pref = LOD_RESOURCE + "theme/"
-    node_resource_pref = LOD_RESOURCE + "node/"
-    relevant_resource_pref = LOD_RESOURCE + "relevant/"
+    theme_resource_pref = LOD_RESOURCE + "themes/"
+    node_resource_pref = LOD_RESOURCE + "nodes/"
+    relevant_resource_pref = LOD_RESOURCE + "relevant_infos/"
 
     def make_ibis_ontology(query):
         return "<" + ontology + query + ">"
