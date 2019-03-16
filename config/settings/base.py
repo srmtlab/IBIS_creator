@@ -146,5 +146,3 @@ LOD_RESOURCE = get_secret("LOD_RESOURCE") + "/resource/"
 LOD_GRAPH_URI = get_secret("LOD_GRAPH_URI")
 ONTOLOGY = get_secret("ONTOLOGY")
 VIRTUOSO_UPDATE_ENDPOINT = get_secret("VIRTUOSO_UPDATE_ENDPOINT")
-
-BASE_URL = ""

@@ -6,30 +6,24 @@
     <meta name="description" content="IBIS CREATORでは、IBIS (Issue-based Information System) という構造を用いて議論を整理・構造化しLOD化します.">
     <meta name="keywords" content="白松研究室,LODチャレンジ,IBIS CREATOR">
     <meta name="author" content="白松研究室">
-
     <title>IBIS CREATOR</title>
-    <link rel="icon" type="image/png" href="{{ base_url }}{% static "img/IBIS_creator_favicon.png"%}">
+    <link rel="icon" type="image/png" href="{% static "img/IBIS_creator_favicon.png"%}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous" />
-    <link rel="stylesheet" type="text/css" media="all" href="{{ base_url }}{% static "css/index/index.css"%}">
+    <link rel="stylesheet" type="text/css" media="all" href="{% static "css/index/index.css"%}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="{{ base_url }}{% static "js/index/init.js"%}"></script>
-    <style>
-        .jumbotron-fixed{
-            background-image: url("{{ base_url }}{% static "img/index/background.jpg"%}");
-        }
-    </style>
+    <script type="text/javascript" src="{% static "js/index/init.js"%}"></script>
 </head>
-<body>
 
+<body>
 <div id="content-wrapper">
     <header>
         <nav class="navbar navbar-fixed">
-            <span class="navbar-brand mb-0 h1">
-                            <img src="{{ base_url }}{% static "img/IBIS_creator_favicon.png"%}" width="30" height="30" class="d-inline-block align-top" alt="">
-                IBIS CREATOR
-            </span>
+        <span class="navbar-brand mb-0 h1">
+        <img src="{% static "img/IBIS_creator_favicon.png"%}" width="30" height="30" class="d-inline-block align-top" alt="IBIS CREATOR favicon">
+        IBIS CREATOR
+    </span>
         </nav>
     </header>
     <div class="jumbotron jumbotron-fluid jumbotron-fixed">
@@ -43,17 +37,17 @@
     </nav>
 
     {% if theme_list %}
-        <div class="row">
-            {% for theme in theme_list %}
-                <div class="col-lg-4">
-                    <div class="pane">
-                        <h5 class="theme_name">{{ theme.theme_name }}</h5>
-                        <p class="description">{{ theme.theme_description }}</p>
-                        <p><a class="btn btn-primary edit_button" href="{{ base_url }}/theme/{{ theme.id }}/" role="button">編集 &raquo;</a></p>
-                    </div>
-                </div>
-            {% endfor %}
+    <div class="row">
+        {% for theme in theme_list %}
+        <div class="col-lg-4">
+            <div class="pane">
+                <h5 class="theme_name">{{ theme.theme_name }}</h5>
+                <p class="description">{{ theme.theme_description }}</p>
+                <p><a class="btn btn-primary edit_button" href="/theme/{{ theme.id }}/" role="button">編集 &raquo;</a></p>
+            </div>
         </div>
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
 
@@ -68,7 +62,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="createTheme" method="post">
+                <form name="createTheme" method="post" action="{% url 'IBIS_creator:make_theme' %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="create-theme-name" class="col-form-label">テーマ名 <span style="color: red">(必須)</span></label>
@@ -92,8 +86,5 @@
     Copyright (C) 2018 白松研究室 All Rights Reserved.
 </footer>
 
-<script type="text/javascript">
-    let base_url = "{{ base_url }}";
-</script>
 </body>
 </html>

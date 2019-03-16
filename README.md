@@ -6,16 +6,11 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 # Dependency
 - [MeCab](http://taku910.github.io/mecab/)
 - Python3.6
-    - I make IBIS CREATOR under python3.6, so the other python version maybe error.
 - IBIS CREATOR depends on below python packages
-    - Django
-    - mecab-python3
-    - requests
-    - django-debug-toolbar (for development)
 - Redis
-- Virtuoso (optional)
-    - IBIS CREATOR uses Virtuoso as RDF store
 
+## Optional Dependencies
+- Virtuoso
 
 # Setup
 ```bash

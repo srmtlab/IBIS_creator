@@ -17,6 +17,7 @@ GETリクエスト
 
 """
 
+app_name = 'IBIS_creator'
 urlpatterns = [
     # POST request
     path('api/make_theme/', views.make_theme, name='make_theme'),

@@ -1,37 +1,42 @@
 from django.http import HttpResponse
-from django.template import loader
-from django.http import Http404
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
+from django.urls import reverse
 from .models import Theme
 from .models import Node
 from .models import RelevantInfo
 from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
-from config.settings.base import BASE_URL
 from config.settings.base import LOD
 
 
 def make_theme(request):
     if request.method == "POST":
         theme = request.POST
-        theme_name = theme["name"]
-        theme_description = theme["description"]
-        theme_obj = Theme(theme_name=theme_name, theme_description=theme_description)
-        theme_obj.save()
-        node_obj = Node(node_name=theme_name, node_type="Issue", node_description=theme_description,
-                        theme=theme_obj)
-        node_obj.save()
-        NodeNode(child_node=node_obj).save()
-        if LOD:
-            Virtuoso().makeTheme(theme_obj, node_obj)
-            Virtuoso().addNode(node_obj, None)
-        return redirect('../../theme/' + str(theme_obj.id) + '/')
+        try:
+            theme_name = theme["name"]
+            theme_description = theme["description"]
+        except KeyError:
+            return HttpResponseBadRequest("不正なリクエストです")
+        else:
+            theme_obj = Theme(theme_name=theme_name, theme_description=theme_description)
+            theme_obj.save()
+            node_obj = Node(node_name=theme_name, node_type="Issue", node_description=theme_description,
+                            theme=theme_obj)
+            node_obj.save()
+            NodeNode(child_node=node_obj).save()
+            if LOD:
+                Virtuoso().makeTheme(theme_obj, node_obj)
+                Virtuoso().addNode(node_obj, None)
+            return redirect(reverse('IBIS_creator:show_theme', args=[theme_obj.id]))
     else:
-        raise Http404()
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['POST'], message)
 
 
 """
@@ -59,62 +64,69 @@ def add_relevant_info(request, theme_id):
 
 @ensure_csrf_cookie
 def index(request):
-    template = loader.get_template('IBIS_creator/index.html')
-    theme_list = Theme.objects.all().order_by("id").reverse()
-    context = {
-        'base_url': BASE_URL,
-        'theme_list': theme_list
-    }
-    return HttpResponse(template.render(context, request))
-
-
-def show_theme(request, theme_id):
-    if Theme.objects.filter(pk=theme_id).exists():
-        template = loader.get_template('IBIS_creator/create_ibis.html')
-        theme = Theme.objects.get(pk=theme_id)
+    if request.method == "GET":
+        theme_list = Theme.objects.all().order_by("id").reverse()
         context = {
-            'base_url': BASE_URL,
+            'theme_list': theme_list
+        }
+        return render(request, 'IBIS_creator/index.html', context)
+    else:
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
+
+
+@csrf_exempt
+def show_theme(request, theme_id):
+    if request.method == "GET":
+        theme = get_object_or_404(Theme, pk=theme_id)
+        context = {
             'theme': theme
         }
-        return HttpResponse(template.render(context, request))
+        return render(request, 'IBIS_creator/create_ibis.html', context)
     else:
-        raise Http404("指定されたテーマは存在しません。")
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def search_relevant_info(request):
     if request.method == "GET":
-        query = request.GET.get(key="q")
-        return JsonResponse(search(query))
+        try:
+            query = request.GET["q"]
+        except KeyError:
+            return HttpResponseBadRequest("パラメータに誤りが有ります")
+        else:
+            return JsonResponse(search(query))
     else:
-        raise Http404()
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def ontology(request):
-    with open("IBIS_creator/static/IBIS_creator-owl.ttl", encoding='utf-8') as f:
-        ontology_str = f.read()
-    return HttpResponse(ontology_str, content_type="text/turtle; charset=utf-8")
+    if request.method == "GET":
+        with open("IBIS_creator/static/IBIS_creator-owl.ttl", encoding='utf-8') as f:
+            ontology_str = f.read()
+        return HttpResponse(ontology_str, content_type="text/turtle; charset=utf-8")
+    else:
+        message = request.method + "は許可されていないメソッドタイプです"
+        return HttpResponseNotAllowed(['GET'], message)
 
 
 def resource_theme_info(request, theme_id):
-    theme_queryset = Theme.objects.filter(pk=theme_id)
-    if theme_queryset.exists():
-        theme_obj = theme_queryset[0]
-
+    try:
+        theme_obj = Theme.objects.get(pk=theme_id)
         theme_json = '{ "id" : ' + str(theme_obj.id) \
                      + ' , "name" : "' + theme_obj.theme_name \
                      + '" , "description" : "' + theme_obj.theme_description \
                      + '" }'
-
-        return HttpResponse(theme_json, content_type="application/json")
+    except Theme.DoesNotExist:
+        return HttpResponse("{}", content_type="application/json")
     else:
-        return HttpResponse(False)
+        return HttpResponse(theme_json, content_type="application/json")
 
 
 def resource_node_info(request, node_id):
-    node_queryset = Node.objects.filter(pk=node_id)
-    if node_queryset.exists():
-        node_obj = node_queryset[0]
-
+    try:
+        node_obj = Node.objects.get(pk=node_id)
         if len(node_obj.node_description.strip()) != 0:
             node_json = '{ "id" : ' + str(node_obj.id) \
                         + ' , "name" : "' + node_obj.node_name \
@@ -126,21 +138,20 @@ def resource_node_info(request, node_id):
                         + ' , "name" : "' + node_obj.node_name \
                         + '" , "type" : "' + node_obj.node_type \
                         + '" }'
-
-        return HttpResponse(node_json, content_type="application/json")
+    except Node.DoesNotExist:
+        return HttpResponse("{}", content_type="application/json")
     else:
-        return HttpResponse(False)
+        return HttpResponse(node_json, content_type="application/json")
 
 
 def resource_relevant_info(request, relevant_id):
-    relevant_info_queryset = RelevantInfo.objects.filter(pk=relevant_id)
-    if relevant_info_queryset.exists():
-        relevant_info_obj = relevant_info_queryset[0]
+    try:
+        relevant_info_obj = RelevantInfo.objects.get(pk=relevant_id)
         relevant_json = '{ "id" : ' + str(relevant_info_obj.id)\
                         + ' , "url" : "' + relevant_info_obj.relevant_url \
                         + '", "title" : "' + relevant_info_obj.relevant_title \
                         + '" }'
-
-        return HttpResponse(relevant_json, content_type="application/json")
+    except RelevantInfo.DoesNotExist:
+        return HttpResponse("{}", content_type="application/json")
     else:
-        return HttpResponse(False)
+        return HttpResponse(relevant_json, content_type="application/json")

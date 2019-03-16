@@ -102,3 +102,7 @@ footer{
     padding-bottom: 10px;
     color: gray;
 }
+
+.jumbotron-fixed{
+    background-image: url("../../img/index/background.jpg");
+}

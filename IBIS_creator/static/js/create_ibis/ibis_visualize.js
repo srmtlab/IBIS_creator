@@ -241,7 +241,8 @@ function update(source, move_flag = false) {
                     return static_url + "img/create_ibis/operator/reason.png";
                 }else if (type === "Opinion"){
                     return static_url + "img/create_ibis/operator/opinion.png";
-                }}
+                }
+            }
         )
         .attr("x", - (circle_range / 2))
         .attr("y", - (circle_range / 2))
@@ -260,7 +261,7 @@ function update(source, move_flag = false) {
         .attr("xlink:href",
             function (d) {
                 if(d.parent !== null){
-                    return static_url + "img/create_ibis/operator/delete.png";
+                    return  static_url + "img/create_ibis/operator/delete.png";
                 }
             }
         )

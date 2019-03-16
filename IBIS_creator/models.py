@@ -13,8 +13,17 @@ class Theme(models.Model):
 
 class Node(models.Model):
     # id = models.AutoField(primary_key=True)
+    NODE_TYPES = (
+        ('Issue', '課題'),
+        ('Idea', 'アイデア'),
+        ('Merit', 'メリット'),
+        ('Demerit', 'デメリット'),
+        ('Example', '例示'),
+        ('Reason', '理由'),
+        ('Opinion', '意見'),
+    )
     node_name = models.TextField()
-    node_type = models.CharField(max_length=10)
+    node_type = models.CharField(choices=NODE_TYPES, max_length=10)
     node_description = models.TextField()
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, related_name="nodes")
 
