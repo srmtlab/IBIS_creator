@@ -104,17 +104,11 @@ def resource_theme_info(request, theme_id):
 def resource_node_info(request, node_id):
     try:
         node_obj = Node.objects.get(pk=node_id)
-        if len(node_obj.node_description.strip()) != 0:
-            node_json = '{ "node_id" : ' + str(node_obj.id) \
-                        + ' , "node_name" : "' + node_obj.node_name \
-                        + '" , "node_type" : "' + node_obj.node_type \
-                        + '" , "node_description" : "' + node_obj.node_description \
-                        + '" }'
-        else:
-            node_json = '{ "node_id" : ' + node_obj.id \
-                        + ' , "node_name" : "' + node_obj.node_name \
-                        + '" , "node_type" : "' + node_obj.node_type \
-                        + '" }'
+        node_json = '{ "node_id" : ' + str(node_obj.id) \
+                    + ' , "node_name" : "' + node_obj.node_name \
+                    + '" , "node_type" : "' + node_obj.node_type \
+                    + '" , "node_description" : "' + node_obj.node_description \
+                    + '" }'
     except Node.DoesNotExist:
         return HttpResponse("{}", content_type="application/json")
     else:
