@@ -6,6 +6,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from rest_framework import viewsets
 from rest_framework import routers
+from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
 from config.settings.base import LOD
 from .serializer import ThemeSerializer
 from .serializer import NodeSerializer
@@ -92,7 +93,13 @@ def ontology(request):
         return HttpResponseNotAllowed(['GET'], message)
 
 
+class ExcludeDelete(BasePermission):
+    def has_permission(self, request, view):
+        return request.method in ('DELETE', )
+
+
 class ThemeViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated | ~ExcludeDelete, )
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
     filterset_class = ThemeFilter
