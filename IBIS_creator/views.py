@@ -4,7 +4,9 @@ from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
-from rest_framework import viewsets, routers
+from rest_framework import viewsets
+from rest_framework import routers
+from config.settings.base import LOD
 from .serializer import ThemeSerializer
 from .serializer import NodeSerializer
 from .serializer import RelevantInfoSerializer
@@ -14,7 +16,9 @@ from .models import RelevantInfo
 from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
-from config.settings.base import LOD
+from .filterset import ThemeFilter
+from .filterset import NodeFilter
+from .filterset import RelevantInfoFilter
 
 
 def make_theme(request):
@@ -91,16 +95,19 @@ def ontology(request):
 class ThemeViewSet(viewsets.ModelViewSet):
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
+    filterset_class = ThemeFilter
 
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
+    filterset_class = NodeFilter
 
 
 class RelevantInfoViewSet(viewsets.ModelViewSet):
     queryset = RelevantInfo.objects.all()
     serializer_class = RelevantInfoSerializer
+    filterset_class = RelevantInfoFilter
 
 
 router = routers.DefaultRouter()
