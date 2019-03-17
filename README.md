@@ -6,7 +6,7 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 # Dependency
 - [MeCab](http://taku910.github.io/mecab/)
 - Python3.6
-- IBIS CREATOR depends on below python packages
+    - Django
 - Redis
 
 ## Optional Dependencies
