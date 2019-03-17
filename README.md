@@ -5,8 +5,8 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 
 # Dependency
 - [MeCab](http://taku910.github.io/mecab/)
-- Python3.6
-    - Django
+- Python 3.6
+    - Django 2.x
 - Redis
 
 ## Optional Dependencies
