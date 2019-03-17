@@ -43,7 +43,7 @@
             <div class="pane">
                 <h5 class="theme_name">{{ theme.theme_name }}</h5>
                 <p class="description">{{ theme.theme_description }}</p>
-                <p><a class="btn btn-primary edit_button" href="/themes/{{ theme.id }}/" role="button">編集 &raquo;</a></p>
+                <p><a class="btn btn-primary edit_button" href="{% url 'IBIS_creator:show_theme' theme_id=theme.id %}" role="button">編集 &raquo;</a></p>
             </div>
         </div>
         {% endfor %}
