@@ -88,46 +88,6 @@ def ontology(request):
         return HttpResponseNotAllowed(['GET'], message)
 
 
-def resource_theme_info(request, theme_id):
-    try:
-        theme_obj = Theme.objects.get(pk=theme_id)
-        theme_json = '{ "theme_id" : ' + str(theme_obj.id) \
-                     + ' , "theme_name" : "' + theme_obj.theme_name \
-                     + '" , "theme_description" : "' + theme_obj.theme_description \
-                     + '" }'
-    except Theme.DoesNotExist:
-        return HttpResponse("{}", content_type="application/json")
-    else:
-        return HttpResponse(theme_json, content_type="application/json")
-
-
-def resource_node_info(request, node_id):
-    try:
-        node_obj = Node.objects.get(pk=node_id)
-        node_json = '{ "node_id" : ' + str(node_obj.id) \
-                    + ' , "node_name" : "' + node_obj.node_name \
-                    + '" , "node_type" : "' + node_obj.node_type \
-                    + '" , "node_description" : "' + node_obj.node_description \
-                    + '" }'
-    except Node.DoesNotExist:
-        return HttpResponse("{}", content_type="application/json")
-    else:
-        return HttpResponse(node_json, content_type="application/json")
-
-
-def resource_relevant_info(request, relevant_id):
-    try:
-        relevant_info_obj = RelevantInfo.objects.get(pk=relevant_id)
-        relevant_json = '{ "relevant_info_id" : ' + str(relevant_info_obj.id) \
-                        + ' , "relevant_info_url" : "' + relevant_info_obj.relevant_url \
-                        + '", "relevant_info_title" : "' + relevant_info_obj.relevant_title \
-                        + '" }'
-    except RelevantInfo.DoesNotExist:
-        return HttpResponse("{}", content_type="application/json")
-    else:
-        return HttpResponse(relevant_json, content_type="application/json")
-
-
 class ThemeViewSet(viewsets.ModelViewSet):
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
