@@ -6,7 +6,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from rest_framework import viewsets
 from rest_framework import routers
-from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from config.settings.base import LOD
 from .serializer import ThemeSerializer
 from .serializer import NodeSerializer
@@ -103,7 +103,6 @@ class ThemeViewSet(viewsets.ModelViewSet):
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
     filterset_class = ThemeFilter
-
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
