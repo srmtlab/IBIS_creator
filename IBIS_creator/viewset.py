@@ -33,6 +33,11 @@ class ThemeViewSet(viewsets.ModelViewSet):
         try:
             theme_name = request_data["theme_name"]
             theme_description = request_data["theme_description"]
+            if len(theme_name.strip()) == 0 or len(theme_description.strip()) == 0:
+                message = {
+                    "detail": "zero letters and alphabets is not allowed in this field."
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
             message = {
                 "detail": "miss required parameter to make Theme"
@@ -144,7 +149,7 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
 
             if len(relevant_url.strip()) == 0 or len(relevant_url.strip()) == 0:
                 message = {
-                    "detail": "zero letters and alphabets is not allowed"
+                    "detail": "zero letters and alphabets is not allowed in this field"
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
