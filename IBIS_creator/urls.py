@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls import include
 from . import views
-from .views import router
+from .viewset import router
 
 """
 POSTリクエスト

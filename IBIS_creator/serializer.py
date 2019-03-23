@@ -23,25 +23,7 @@ class ThemeSerializer(serializers.ModelSerializer):
         return NodeNode.objects.filter(parent_node__isnull=True, child_node__theme__id=Theme_obj.id)[0] \
             .child_node.id
 
-    def create(self, validated_data):
-        # POST request
-        theme_name = validated_data["theme_name"]
-        theme_description = validated_data["theme_description"]
-        root_node_name = validated_data.get("root_node_name",theme_name)
-        root_node_description = validated_data.get("root_node_description", theme_description)
-        theme_obj = Theme(theme_name=theme_name, theme_description=theme_description)
-        theme_obj.save()
-        node_obj = Node(node_name=root_node_name, node_type="Issue", node_description=root_node_description,
-                        theme=theme_obj)
-        node_obj.save()
-        NodeNode(child_node=node_obj).save()
-        if LOD:
-            Virtuoso().makeTheme(theme_obj, node_obj)
-            Virtuoso().addNode(node_obj, None)
-        return theme_obj
-
     def update(self, instance, validated_data):
-        # PATCH or PUT request
         instance.theme_name = validated_data.get('theme_name', instance.theme_name)
         instance.theme_description = validated_data.get('theme_description', instance.theme_description)
         instance.save()
@@ -82,6 +64,19 @@ class NodeSerializer(serializers.ModelSerializer):
             child_nodes.append(nodenode.child_node.id)
         return child_nodes
 
+    def update(self, instance, validated_data):
+        instance.node_name = validated_data.get('node_name', instance.node_name)
+        instance.node_type = validated_data.get('node_type', instance.node_type)
+        instance.node_description = validated_data.get('node_description', instance.node_description)
+        instance.save()
+        if LOD:
+            parent_obj = instance.child.all()[0].parent_node
+            if parent_obj is None:
+                Virtuoso().updateNode(instance, None)
+            else:
+                Virtuoso().updateNode(instance, parent_obj.id)
+        return instance
+
 
 class RelevantInfoSerializer(serializers.ModelSerializer):
     relevant_info_id = serializers.SerializerMethodField()
@@ -96,3 +91,11 @@ class RelevantInfoSerializer(serializers.ModelSerializer):
 
     def get_node_id(self, RelevantInfo_obj):
         return RelevantInfo_obj.node.id
+
+    def update(self, instance, validated_data):
+        instance.relevant_url = validated_data.get('relevant_url', instance.relevant_url)
+        instance.relevant_title = validated_data.get('relevant_title', instance.relevant_title)
+        instance.save()
+        if LOD:
+            Virtuoso().updateRelevantInfo(instance)
+        return instance

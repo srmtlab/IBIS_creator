@@ -4,22 +4,12 @@ from django.http import HttpResponseBadRequest
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
-from rest_framework import viewsets
-from rest_framework import routers
-from rest_framework.permissions import IsAuthenticated, BasePermission
 from config.settings.base import LOD
-from .serializer import ThemeSerializer
-from .serializer import NodeSerializer
-from .serializer import RelevantInfoSerializer
 from .models import Theme
 from .models import Node
-from .models import RelevantInfo
 from .models import NodeNode
 from .search import search
 from .virtuoso import Virtuoso
-from .filterset import ThemeFilter
-from .filterset import NodeFilter
-from .filterset import RelevantInfoFilter
 
 
 def make_theme(request):
@@ -91,32 +81,3 @@ def ontology(request):
     else:
         message = request.method + "は許可されていないメソッドタイプです"
         return HttpResponseNotAllowed(['GET'], message)
-
-
-class ExcludeDelete(BasePermission):
-    def has_permission(self, request, view):
-        return request.method in ('DELETE', )
-
-
-class ThemeViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated | ~ExcludeDelete, )
-    queryset = Theme.objects.all()
-    serializer_class = ThemeSerializer
-    filterset_class = ThemeFilter
-
-class NodeViewSet(viewsets.ModelViewSet):
-    queryset = Node.objects.all()
-    serializer_class = NodeSerializer
-    filterset_class = NodeFilter
-
-
-class RelevantInfoViewSet(viewsets.ModelViewSet):
-    queryset = RelevantInfo.objects.all()
-    serializer_class = RelevantInfoSerializer
-    filterset_class = RelevantInfoFilter
-
-
-router = routers.DefaultRouter()
-router.register('themes', ThemeViewSet)
-router.register('nodes', NodeViewSet)
-router.register('relevant_infos', RelevantInfoViewSet)
