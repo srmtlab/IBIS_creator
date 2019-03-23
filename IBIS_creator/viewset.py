@@ -1,3 +1,5 @@
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from rest_framework import viewsets
 from rest_framework import routers
 from rest_framework.response import Response
@@ -150,6 +152,14 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
             if len(relevant_url.strip()) == 0 or len(relevant_title.strip()) == 0:
                 message = {
                     "detail": "zero letters and alphabets is not allowed in this field"
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+            validate = URLValidator()
+            try:
+                validate(relevant_url)
+            except ValidationError:
+                message = {
+                    "relevant_url": "有効なURLを入力してください"
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
