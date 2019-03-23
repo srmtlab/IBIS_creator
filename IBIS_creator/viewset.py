@@ -147,7 +147,7 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
             relevant_title = request_data["relevant_title"]
             node_id = request_data["node_id"]
 
-            if len(relevant_url.strip()) == 0 or len(relevant_url.strip()) == 0:
+            if len(relevant_url.strip()) == 0 or len(relevant_title.strip()) == 0:
                 message = {
                     "detail": "zero letters and alphabets is not allowed in this field"
                 }
@@ -189,7 +189,6 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
                 "detail": "designated Relevant information is not found"
             }
             return Response(message, status=status.HTTP_404_NOT_FOUND)
-
 
 
 router = routers.DefaultRouter()

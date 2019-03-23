@@ -32,7 +32,7 @@ class Node(models.Model):
     )
     node_name = models.TextField()
     node_type = models.CharField(choices=NODE_TYPES, max_length=10)
-    node_description = models.TextField()
+    node_description = models.TextField(default="")
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, related_name="nodes")
 
     def __str__(self):
