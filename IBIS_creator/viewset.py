@@ -70,6 +70,12 @@ class NodeViewSet(viewsets.ModelViewSet):
             node_description = request_data.get("node_description", "")
             parent_node_id = request_data["parent_node_id"]
             theme_id = int(request_data["theme_id"])
+
+            if len(node_name.strip()) == 0:
+                message = {
+                    "detail": "zero letters and alphabets is not allowed"
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
             message = {
                 "detail": "miss required parameter to make Theme"
@@ -135,6 +141,12 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
             relevant_url = request_data["relevant_url"]
             relevant_title = request_data["relevant_title"]
             node_id = request_data["node_id"]
+
+            if len(relevant_url.strip()) == 0 or len(relevant_url.strip()) == 0:
+                message = {
+                    "detail": "zero letters and alphabets is not allowed"
+                }
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except KeyError:
             message = {
                 "detail": "miss required parameter to make Relevant Information"
