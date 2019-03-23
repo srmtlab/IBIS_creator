@@ -123,6 +123,7 @@ class NodeViewSet(viewsets.ModelViewSet):
             }
             return Response(message, status=status.HTTP_404_NOT_FOUND)
 
+
 class RelevantInfoViewSet(viewsets.ModelViewSet):
     queryset = RelevantInfo.objects.all()
     serializer_class = RelevantInfoSerializer
