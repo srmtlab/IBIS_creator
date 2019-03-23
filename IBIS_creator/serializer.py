@@ -5,7 +5,6 @@ from .models import Node
 from .models import RelevantInfo
 from .models import NodeNode
 from .virtuoso import Virtuoso
-from .consumers import IBISConsumer
 
 
 class ThemeSerializer(serializers.ModelSerializer):
