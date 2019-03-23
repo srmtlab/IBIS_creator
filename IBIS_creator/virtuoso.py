@@ -12,9 +12,9 @@ from config.settings.base import VIRTUOSO_UPDATE_ENDPOINT
 class Virtuoso:
     def __init__(self):
         self.ontology = ONTOLOGY
-        self.theme_resource_pref = LOD_RESOURCE + "theme/"
-        self.node_resource_pref = LOD_RESOURCE + "node/"
-        self.relevant_resource_pref = LOD_RESOURCE + "relevant/"
+        self.theme_resource_pref = LOD_RESOURCE + "themes/"
+        self.node_resource_pref = LOD_RESOURCE + "nodes/"
+        self.relevant_resource_pref = LOD_RESOURCE + "relevant_infos/"
         self.updateEndpoint = VIRTUOSO_UPDATE_ENDPOINT
         self.graphURI = LOD_GRAPH_URI
         self.rdf_type = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"

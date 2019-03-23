@@ -162,7 +162,7 @@ class IBISConsumer(WebsocketConsumer):
         node_dic = {}
         stack_nodes = [root_node]
 
-        while(len(stack_nodes) > 0):
+        while len(stack_nodes) > 0:
             node = stack_nodes.pop()
 
             node_data = {

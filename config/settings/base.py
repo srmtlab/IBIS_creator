@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'IBIS_creator.apps.IbisCreatorConfig',
+    'rest_framework',
+    'django_filters',
     'channels',
 ]
 
@@ -136,13 +138,21 @@ CHANNEL_LAYERS = {
     },
 }
 
-# below program about LOD settings
+# Integration with Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+}
 
+# below program about LOD settings
 VIRTUOSO_USER = get_secret("VIRTUOSO_USER")
 VIRTUOSO_PASSWORD = get_secret("VIRTUOSO_PASSWORD")
 
 LOD = get_secret("LOD")
-LOD_RESOURCE = get_secret("LOD_RESOURCE") + "/resource/"
+LOD_RESOURCE = get_secret("LOD_RESOURCE")
 LOD_GRAPH_URI = get_secret("LOD_GRAPH_URI")
 ONTOLOGY = get_secret("ONTOLOGY")
 VIRTUOSO_UPDATE_ENDPOINT = get_secret("VIRTUOSO_UPDATE_ENDPOINT")

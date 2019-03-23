@@ -5,8 +5,8 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 
 # Dependency
 - [MeCab](http://taku910.github.io/mecab/)
-- Python3.6
-- IBIS CREATOR depends on below python packages
+- Python 3.6
+    - Django 2.x
 - Redis
 
 ## Optional Dependencies
@@ -23,8 +23,7 @@ python3 SetUp.py
 Open `local_settings.json` and modify below variable
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
 - "LOD" : If you publish data in IBIS CREATOR as Linked Open Data, you should set this variable as "true"
-- "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...),
-for example if you write `http://example.com` in this variable, this app's namespace is `http://example.com/resource/`
+- "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...)
 - "LOD_GRAPH_URI" : URI to identify RDF graph
 - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
 - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
