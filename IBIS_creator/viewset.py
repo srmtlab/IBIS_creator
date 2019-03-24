@@ -154,7 +154,7 @@ class RelevantInfoViewSet(viewsets.ModelViewSet):
                     "detail": "zero letters and alphabets is not allowed in this field"
                 }
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
-            validate = URLValidator()
+            validate = URLValidator(schemes = ['http', 'https'])
             try:
                 validate(relevant_url)
             except ValidationError:

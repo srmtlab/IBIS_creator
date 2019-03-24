@@ -304,9 +304,12 @@ function show_relevant_info(d) {
                 let tr = document.createElement('tr');
                 let td = document.createElement('td');
                 td.setAttribute("data-relevant_info_index", i);
-                if(relevantData_url.match(/^https?:\/\//)){
-                    td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
-                }
+                td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
+
+
+
+
+
                 td.innerText = relevantData_title;
                 tr.append(td);
                 table_relevant_info_details.append(tr);
@@ -441,6 +444,10 @@ function send_add_relevant_info(d) {
 
     if(!document.getElementById("add-relevant-info-title").value.trim() || !document.getElementById("add-relevant-info-url").value.trim()){
         alert("入力に不備があります");
+        return;
+    }
+    if (!document.getElementById("add-relevant-info-url").value.match(/^https?:\/\//)) {
+        alert("有効なURLを入力してください");
         return;
     }
 
