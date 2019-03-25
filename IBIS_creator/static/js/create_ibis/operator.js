@@ -584,6 +584,10 @@ function send_edit_relevant_info(index, d) {
         alert("入力に不備があります");
         return;
     }
+    if (!relevant_url.value.match(/^https?:\/\//)) {
+        alert("有効なURLを入力してください");
+        return;
+    }
 
     let json_data = {
         'node_id' : d.id,
