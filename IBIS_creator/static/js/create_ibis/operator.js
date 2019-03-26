@@ -17,8 +17,9 @@ function show_edit_theme() {
 
 function send_edit_theme() {
 
-    if(!document.getElementById("edit-theme-name").value.trim() || !document.getElementById("edit-theme-description").value.trim()){
-        alert("入力に不備があります");
+    let theme_form = document.editTheme;
+    if(theme_form.checkValidity() === false){
+        theme_form.classList.add("was-validated");
         return;
     }
 
@@ -72,8 +73,9 @@ function show_add_node(d) {
 
 function send_add_node(d) {
 
-    if(!document.getElementById("add-node-name").value.trim() || document.getElementById("add-node-type").value === "unselected"){
-        alert("入力に不備があります");
+    let node_form = document.addNode;
+    if(node_form.checkValidity() === false){
+        node_form.classList.add("was-validated");
         return;
     }
 
@@ -243,8 +245,10 @@ function show_edit_node(d) {
 }
 
 function send_edit_node(d) {
-    if(!document.getElementById("edit-node-name").value.trim()){
-        alert("入力に不備があります");
+
+    let node_form = document.editNode;
+    if(node_form.checkValidity() === false){
+        node_form.classList.add("was-validated");
         return;
     }
 
@@ -442,19 +446,19 @@ function show_add_relevant_info(d) {
 
 function send_add_relevant_info(d) {
 
+    let relevant_info_form = document.addRelevantInfo;
+    if(relevant_info_form.checkValidity() === false){
+        relevant_info_form.classList.add("was-validated");
+        return;
+    }
+
     let relevant_url = document.getElementById("add-relevant-info-url").value;
     let relevant_title = document.getElementById("add-relevant-info-title").value;
 
-
-    if(!relevant_title.trim() || !relevant_url.trim()){
-        alert("入力に不備があります");
-        return;
-    }
     if (!relevant_url.match(/^https?:\/\//)) {
         alert("有効なURLを入力してください");
         return;
     }
-
 
     let json_data = {
         'node_id' : d.data.id,
@@ -578,15 +582,18 @@ function show_edit_relevant_info(index, d) {
 }
 
 function send_edit_relevant_info(index, d) {
+
+    let relevant_info_form = document.editRelevantInfo;
+    if(relevant_info_form.checkValidity() === false){
+        relevant_info_form.classList.add("was-validated");
+        return;
+    }
+
     let relevant = d.data.relevant[index];
     let relevant_url = document.getElementById("edit-relevant-info-url").value;
     let relevant_title = document.getElementById("edit-relevant-info-title").value;
 
-    if(!relevant_title.trim() || !relevant_url.trim()){
-        alert("入力に不備があります");
-        return;
-    }
-    if (!relevant_url.value.match(/^https?:\/\//)) {
+    if (!relevant_url.match(/^https?:\/\//)) {
         alert("有効なURLを入力してください");
         return;
     }

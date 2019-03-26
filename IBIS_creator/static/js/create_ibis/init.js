@@ -143,11 +143,19 @@ window.onload = function () {
 
     init_data(websocket_url);
 
+    $("#edit-theme").on('hidden.bs.modal', function () {
+        document.editTheme.classList.remove("was-validated");
+    });
 
     $("#add-node").on('hidden.bs.modal', function () {
         document.getElementById("add-node-name").value = "";
-        document.getElementById("add-node-type").value = "unselected";
+        document.getElementById("add-node-type").value = "";
         document.getElementById("add-node-description").value = "";
+        document.addNode.classList.remove("was-validated");
+    });
+
+    $("#edit-node").on('hidden.bs.modal', function () {
+        document.editNode.classList.remove("was-validated");
     });
 
     $("#relevant-info").on('hidden.bs.modal', function () {
@@ -169,10 +177,12 @@ window.onload = function () {
     $("#add-relevant-info").on('hidden.bs.modal', function () {
         document.getElementById("add-relevant-info-url").value = "";
         document.getElementById("add-relevant-info-title").value = "";
+        document.addRelevantInfo.classList.remove("was-validated");
         show_relevant_info(modal_obj);
     });
 
     $("#edit-relevant-info").on('hidden.bs.modal', function () {
+        document.editRelevantInfo.classList.remove("was-validated");
         show_relevant_info(modal_obj);
     });
 };
