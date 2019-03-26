@@ -442,17 +442,19 @@ function show_add_relevant_info(d) {
 
 function send_add_relevant_info(d) {
 
-    if(!document.getElementById("add-relevant-info-title").value.trim() || !document.getElementById("add-relevant-info-url").value.trim()){
+    let relevant_url = document.getElementById("add-relevant-info-url").value;
+    let relevant_title = document.getElementById("add-relevant-info-title").value;
+
+
+    if(!relevant_title.trim() || !relevant_url.trim()){
         alert("入力に不備があります");
         return;
     }
-    if (!document.getElementById("add-relevant-info-url").value.match(/^https?:\/\//)) {
+    if (!relevant_url.match(/^https?:\/\//)) {
         alert("有効なURLを入力してください");
         return;
     }
 
-    let relevant_url = document.getElementById("add-relevant-info-url").value;
-    let relevant_title = document.getElementById("add-relevant-info-title").value;
 
     let json_data = {
         'node_id' : d.data.id,
