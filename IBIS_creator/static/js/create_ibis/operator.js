@@ -455,11 +455,6 @@ function send_add_relevant_info(d) {
     let relevant_url = document.getElementById("add-relevant-info-url").value;
     let relevant_title = document.getElementById("add-relevant-info-title").value;
 
-    if (!relevant_url.match(/^https?:\/\//)) {
-        alert("有効なURLを入力してください");
-        return;
-    }
-
     let json_data = {
         'node_id' : d.data.id,
         'relevant_url' : relevant_url,
@@ -592,11 +587,6 @@ function send_edit_relevant_info(index, d) {
     let relevant = d.data.relevant[index];
     let relevant_url = document.getElementById("edit-relevant-info-url").value;
     let relevant_title = document.getElementById("edit-relevant-info-title").value;
-
-    if (!relevant_url.match(/^https?:\/\//)) {
-        alert("有効なURLを入力してください");
-        return;
-    }
 
     let json_data = {
         'node_id' : d.id,

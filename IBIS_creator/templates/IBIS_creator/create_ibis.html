@@ -232,7 +232,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="addRelevantInfo" novalidate>
+                <form name="addRelevantInfo" data-toggle="validator" novalidate>
                     <div class="form-group">
                         <label for="add-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
                         <input type="text" class="form-control" id="add-relevant-info-title" placeholder="タイトル" required>
@@ -242,9 +242,9 @@
                     </div>
                     <div class="form-group">
                         <label for="add-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="add-relevant-info-url" placeholder="URL" required>
+                        <input type="url" pattern="^https?://.+" class="form-control" id="add-relevant-info-url" placeholder="URL" required>
                         <div class="invalid-feedback">
-                            URLを入力してください
+                            有効なURLを入力してください
                         </div>
                     </div>
                 </form>
@@ -286,7 +286,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="editRelevantInfo" novalidate>
+                <form name="editRelevantInfo" data-toggle="validator" novalidate>
                     <div class="form-group">
                         <label for="edit-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
                         <input type="text" class="form-control" id="edit-relevant-info-title" placeholder="タイトル" required>
@@ -296,9 +296,9 @@
                     </div>
                     <div class="form-group">
                         <label for="edit-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="edit-relevant-info-url" placeholder="URL" required>
+                        <input type="url" pattern="^https?://.+" class="form-control" id="edit-relevant-info-url" placeholder="URL" required>
                         <div class="invalid-feedback">
-                            URLを入力してください
+                            有効なURLを入力してください
                         </div>
                     </div>
                 </form>
