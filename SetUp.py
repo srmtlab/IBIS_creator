@@ -7,6 +7,7 @@ with open('local_settings.json', "w") as fw:
         "FILENAME": "local_settings.json",
         "SECRET_KEY": get_random_secret_key(),
         "ALLOWED_HOSTS": [""],
+        "STATIC_ROOT": "",
         "LOD": False,
         "LOD_RESOURCE": "",
         "LOD_GRAPH_URI": "",
