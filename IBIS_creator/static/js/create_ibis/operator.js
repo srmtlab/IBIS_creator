@@ -316,30 +316,9 @@ function show_relevant_info(d) {
         url: "/relevant_info_search/?q=" + query
     }).done(function(d){
         // if data sending is successful
-
-        new Vue({
-            el: '#relevant-info-searches-form',
-            delimiters: ['${', '}'],
-            data: {
-                query_list : d.query,
-                checkedQuery : [],
-            },
-            methods:{
-                search_info : function (query_list) {
-                    let searchQuery = "";
-                    for(let i in query_list) {
-                        if(query_list.hasOwnProperty(i)){
-                            searchQuery = searchQuery + "+" + query_list[i];
-                        }
-                    }
-                    window.open(
-                        "https://www.google.co.jp/search?q=" + searchQuery,
-                        '_blank',
-                        'menubar=no,toolbar=yes,resizable=yes,width=700,height=500,top=100,left=100'
-                    );
-                }
-            }
-        });
+        searchVueobj.query_list = d.query;
+        searchVueobj.checkedQuery = [];
+        searchVueobj.$forceUpdate();
 
         /*
         document.getElementById("relevant-info-searches-button").setAttribute('data-theme-id', theme_id);

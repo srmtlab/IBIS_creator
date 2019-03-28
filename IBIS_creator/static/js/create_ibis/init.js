@@ -12,7 +12,7 @@ let ibis_width, ibis_height, navvar_height;
 let scale = 1, current_gx, current_gy, translate_x = 0, translate_y = 0;
 let init_flag = true;
 let connection = null;
-let relevantInfoVueobj;
+let relevantInfoVueobj, searchVueobj;
 
 
 function resize_ibis() {
@@ -94,6 +94,30 @@ function init_data(websocket_url) {
                     }
                 }
             });
+
+            searchVueobj = new Vue({
+            el: '#relevant-info-searches-form',
+            delimiters: ['${', '}'],
+            data: {
+                query_list : {},
+                checkedQuery : [],
+            },
+            methods:{
+                search_info : function (query_list) {
+                    let searchQuery = "";
+                    for(let i in query_list) {
+                        if(query_list.hasOwnProperty(i)){
+                            searchQuery = searchQuery + "+" + query_list[i];
+                        }
+                    }
+                    window.open(
+                        "https://www.google.co.jp/search?q=" + searchQuery,
+                        '_blank',
+                        'menubar=no,toolbar=yes,resizable=yes,width=700,height=500,top=100,left=100'
+                    );
+                }
+            }
+        });
         }else if (status === "work"){
 
             let type = receive_data["type"];
