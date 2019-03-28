@@ -1,18 +1,26 @@
 IBIS CREATOR
 ====
-IBIS CREATOR is to make the IBIS ( Issue-based information system ) structure  
+IBIS CREATOR is the Web application to make the IBIS ( Issue-based information system ) structure.
 This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 
-# Dependency
+## Description
+IBIS CREATOR is the Web application to make the IBIS ( Issue-based information system ) structure which is an argumentation-based approach to clarifying problems that involve multiple stakeholders.
+
+## Online demo
+Under Construction
+
+## Requirement
 - [MeCab](http://taku910.github.io/mecab/)
 - Python 3.6
     - Django 2.x
 - Redis
+- Virtuoso (Optional)
 
-## Optional Dependencies
-- Virtuoso
 
-# Setup
+## Setup
+If you use this app, please read `Deploy IBIS CREATOR`.
+If you develop this app, please read `Develop IBIS CREATOR`.
+
 ```bash
 git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
@@ -22,12 +30,14 @@ python3 SetUp.py
 
 Open `local_settings.json` and modify below variable
 - "ALLOWED_HOSTS" : the host/domain names that IBIS CREATOR can serve
-- "LOD" : If you publish data in IBIS CREATOR as Linked Open Data, you should set this variable as "true"
-- "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...)
-- "LOD_GRAPH_URI" : URI to identify RDF graph
-- "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
-- "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
-- "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
+- "STATIC_ROOT" : The absolute path to the directory where will locate static files for deployment.
+- If you publish data in IBIS CREATOR as Linked Open Data, you should set below variable
+    - "LOD" : true
+    - "LOD_RESOURCE" : IBIS CREATOR concept namespace to append app's element ID (Theme, node, ...)
+    - "LOD_GRAPH_URI" : URI to identify RDF graph
+    - "VIRTUOSO_USER" : user which has the permission to edit Virtuoso RDF store
+    - "VIRTUOSO_PASSWORD" : password for "VIRTUOSO_USER"
+    - "VIRTUOSO_UPDATE_ENDPOINT" : endpoint to renew RDF store
 
 ```json
 "ALLOWED_HOSTS": ["example.com","example.jp"],
@@ -38,11 +48,6 @@ Open `local_settings.json` and modify below variable
 python3 manage.py migrate --settings config.settings.production
 python3 manage.py makemigrations IBIS_creator --settings config.settings.production
 python3 manage.py migrate --settings config.settings.production
-```
-
-## run the app
-```bash
-python3 manage.py runserver --settings config.settings.production
 ```
 
 # For Developer
