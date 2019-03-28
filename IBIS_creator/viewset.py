@@ -76,8 +76,6 @@ class NodeViewSet(viewsets.ModelViewSet):
             node_type = request_data["node_type"]
             node_description = request_data.get("node_description", "")
             parent_node_id = request_data["parent_node_id"]
-            theme_id = int(request_data["theme_id"])
-
             if len(node_name.strip()) == 0:
                 message = {
                     "detail": "zero letters and alphabets is not allowed"
@@ -90,13 +88,8 @@ class NodeViewSet(viewsets.ModelViewSet):
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
         else:
             try:
-                theme_obj = Theme.objects.get(id=theme_id)
                 parent_node_obj = Node.objects.get(id=parent_node_id)
-            except Theme.DoesNotExist:
-                message = {
-                    "detail": "designated Theme is not found"
-                }
-                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+                theme_obj = parent_node_obj.theme
             except Node.DoesNotExist:
                 message = {
                     "detail": "designated parent Node is not found"
@@ -106,11 +99,6 @@ class NodeViewSet(viewsets.ModelViewSet):
                 if node_type not in [i[0] for i in Node.NODE_TYPES]:
                     message = {
                         "detail": "designated node type is not allowed"
-                    }
-                    return Response(message, status=status.HTTP_400_BAD_REQUEST)
-                elif parent_node_obj.theme.id != theme_id:
-                    message = {
-                        "detail": "designated parent Node is not in designated Theme"
                     }
                     return Response(message, status=status.HTTP_400_BAD_REQUEST)
                 else:
