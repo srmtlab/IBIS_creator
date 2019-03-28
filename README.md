@@ -18,8 +18,8 @@ Under Construction
 
 
 ## Setup
-If you use this app, please read [`How to deploy IBIS CREATOR`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy).
-If you develop this app, please read [`How to set up development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy)
+If you use this app, please read the [`How to deploy IBIS CREATOR`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy).  
+If you develop this app and set up development environment, please read the [`How to set up development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy)
 
 # Authors
 - Akira Kamiya
