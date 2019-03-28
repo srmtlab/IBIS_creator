@@ -7,11 +7,12 @@ https://stackoverflow.com/questions/32327489/error-invalid-value-for-g-attribute
 as a reference
 */
 
-let g, root, modal_obj, theme_obj, relevant_info_index;
+let g, root, modal_obj, theme_obj = null, relevant_info_obj;
 let ibis_width, ibis_height, navvar_height;
 let scale = 1, current_gx, current_gy, translate_x = 0, translate_y = 0;
 let init_flag = true;
 let connection = null;
+
 
 function resize_ibis() {
     navvar_height = document.getElementById("navvar").offsetHeight + 10;
@@ -54,6 +55,7 @@ function init_data(websocket_url) {
 
         if(init_flag && status === "init"){
             theme_obj = receive_data["theme"];
+
 
             let ibisData = receive_data['node'];
 
@@ -123,17 +125,6 @@ function init_data(websocket_url) {
 
 }
 
-function tr_default(tblID){
-    let vTR = tblID + " tr";
-    $(vTR).css("background-color","#ffffff");
-}
-
-function tr_click(trID){
-    trID.css("background-color","#bce2e8");
-    $("#relevant-info-details-buttons button").prop("disabled", false);
-    relevant_info_index = Number(trID.children('td').attr('data-relevant_info_index'));
-}
-
 window.addEventListener("resize", resize_ibis);
 
 window.onload = function () {
@@ -156,18 +147,6 @@ window.onload = function () {
 
     $("#edit-node").on('hidden.bs.modal', function () {
         document.editNode.classList.remove("was-validated");
-    });
-
-    $("#relevant-info").on('hidden.bs.modal', function () {
-        let relevant_info_details = document.getElementById("relevant-info-details");
-        let relevant_info_searches = document.getElementById("relevant-info-searches");
-
-        relevant_info_details.parentNode.removeChild(relevant_info_details);
-        relevant_info_searches.parentNode.removeChild(relevant_info_searches);
-
-        document.getElementById("relevant-info-searches-buttons").style.display="block";
-        $("#relevant-info-details-buttons > .btn-danger").prop("disabled", true);
-        $("#relevant-info-details-buttons > .btn-success").prop("disabled", true);
     });
 
     $("#delete-relevant-info").on('hidden.bs.modal', function () {
