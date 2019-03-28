@@ -1,18 +1,26 @@
 IBIS CREATOR
 ====
-IBIS CREATOR is to make the IBIS ( Issue-based information system ) structure  
+IBIS CREATOR is the Web application to make the IBIS ( Issue-based information system ) structure.
 This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 
-# Dependency
+## Description
+IBIS CREATOR is the Web application to make the IBIS ( Issue-based information system ) structure which is an argumentation-based approach to clarifying problems that involve multiple stakeholders.
+
+## Online demo
+Under Construction
+
+## Requirement
 - [MeCab](http://taku910.github.io/mecab/)
 - Python 3.6
     - Django 2.x
 - Redis
+- Virtuoso (Optional)
 
-## Optional Dependencies
-- Virtuoso
 
-# Setup
+## Setup
+If you use this app, please read `Deploy IBIS CREATOR`.
+If you develop this app, please read `Develop IBIS CREATOR`.
+
 ```bash
 git clone https://github.com/srmtlab/IBIS_creator.git
 cd IBIS_creator
@@ -40,11 +48,6 @@ Open `local_settings.json` and modify below variable
 python3 manage.py migrate --settings config.settings.production
 python3 manage.py makemigrations IBIS_creator --settings config.settings.production
 python3 manage.py migrate --settings config.settings.production
-```
-
-## run the app
-```bash
-python3 manage.py runserver --settings config.settings.production
 ```
 
 # For Developer
