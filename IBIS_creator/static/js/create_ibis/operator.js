@@ -289,33 +289,15 @@ function edit_node(data) {
 /* end edit node */
 
 /* start relevant_info */
-function tr_click(trID){
-    relevant_info_index = Number(trID.children('td').attr('data-relevant_info_index'));
-}
-
 function show_relevant_info(d) {
     modal_obj = d;
 
-    let relevantData = d.data.relevant;
-    new Vue({
-        el: '#relevant-info-details-form',
-        delimiters: ['${', '}'],
-        data: {
-            relevantData : relevantData,
-            Buttons_enabled : true
-        },
-        methods:{
-            dbclick_href : function (url) {
-                window.open().location.href=url;
-            },
-            select_relevantInfo : function (datum, event) {
-                this.Buttons_enabled = false;
-                $("#relevant-info-details-form td").css("background-color","#ffffff");
-                $(event.target).css("background-color","#bce2e8");
-                relevant_info_obj = datum;
-            }
-        }
-    });
+    // let relevantData = d.data.relevant;
+    relevantInfoVueobj.relevantData = d.data.relevant;
+    relevantInfoVueobj.Buttons_enabled = true;
+    $("#relevant-info-details-form td").css("background-color","#ffffff");
+    relevantInfoVueobj.$forceUpdate();
+
 
     let query = d.data.name;
     let temp = d;
@@ -544,13 +526,12 @@ function send_edit_relevant_info(relevant_info_obj, d) {
         return;
     }
 
-    let relevant = relevant_info_obj.id;
     let relevant_url = document.getElementById("edit-relevant-info-url").value;
     let relevant_title = document.getElementById("edit-relevant-info-title").value;
 
     let json_data = {
         'node_id' : d.id,
-        'relevant_id' : relevant.id,
+        'relevant_id' : relevant_info_obj.id,
         'relevant_url' : relevant_url,
         'relevant_title': relevant_title
     };

@@ -12,6 +12,7 @@ let ibis_width, ibis_height, navvar_height;
 let scale = 1, current_gx, current_gy, translate_x = 0, translate_y = 0;
 let init_flag = true;
 let connection = null;
+let relevantInfoVueobj;
 
 
 function resize_ibis() {
@@ -73,6 +74,26 @@ function init_data(websocket_url) {
                 .on("dblclick.zoom", null);
 
             update(root);
+
+            relevantInfoVueobj = new Vue({
+                el: '#relevant-info-details-form',
+                delimiters: ['${', '}'],
+                data: {
+                    relevantData : {},
+                    Buttons_enabled : true
+                },
+                methods:{
+                    dbclick_href : function (url) {
+                        window.open().location.href=url;
+                    },
+                    select_relevantInfo : function (datum, event) {
+                        this.Buttons_enabled = false;
+                        $("#relevant-info-details-form td").css("background-color","#ffffff");
+                        $(event.target).css("background-color","#bce2e8");
+                        relevant_info_obj = datum;
+                    }
+                }
+            });
         }else if (status === "work"){
 
             let type = receive_data["type"];
