@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="{% static "img/IBIS_creator_favicon.png"%}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" media="all" href="{% static "css/index/index.css"%}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{% static "js/index/init.js"%}"></script>
@@ -37,17 +37,17 @@
     </nav>
 
     {% if theme_list %}
-    <div class="row">
-        {% for theme in theme_list %}
-        <div class="col-lg-4">
-            <div class="pane">
-                <h5 class="theme_name">{{ theme.theme_name }}</h5>
-                <p class="description">{{ theme.theme_description }}</p>
-                <p><a class="btn btn-primary edit_button" href="{% url 'IBIS_creator:show_theme' theme_id=theme.id %}" role="button">編集 &raquo;</a></p>
-            </div>
+        <div class="row">
+            {% for theme in theme_list %}
+                <div class="col-lg-4">
+                    <div class="pane">
+                        <h5 class="theme_name">{{ theme.theme_name }}</h5>
+                        <p class="description">{{ theme.theme_description }}</p>
+                        <p><a class="btn btn-primary edit_button" href="{% url 'IBIS_creator:show_theme' theme_id=theme.id %}" role="button">編集 &raquo;</a></p>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
     {% endif %}
 </div>
 
@@ -62,15 +62,21 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="createTheme" method="post" action="{% url 'IBIS_creator:make_theme' %}">
+                <form name="createTheme" method="post" action="{% url 'IBIS_creator:make_theme' %}" novalidate>
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="create-theme-name" class="col-form-label">テーマ名 <span style="color: red">(必須)</span></label>
-                        <input name="name" type="text" class="form-control" id="create-theme-name">
+                        <input name="name" type="text" class="form-control" id="create-theme-name" placeholder="テーマ名" required>
+                        <div class="invalid-feedback">
+                            テーマ名を入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="create-theme-description" class="col-form-label">テーマの説明 <span style="color: red">(必須)</span></label>
-                        <textarea name="description" class="form-control" id="create-theme-description"></textarea>
+                        <textarea name="description" class="form-control" id="create-theme-description" placeholder="テーマの説明" required></textarea>
+                        <div class="invalid-feedback">
+                            テーマの説明に関して入力してください
+                        </div>
                     </div>
                 </form>
             </div>

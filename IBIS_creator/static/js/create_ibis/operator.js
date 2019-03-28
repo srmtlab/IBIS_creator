@@ -17,8 +17,9 @@ function show_edit_theme() {
 
 function send_edit_theme() {
 
-    if(!document.getElementById("edit-theme-name").value.trim() || !document.getElementById("edit-theme-description").value.trim()){
-        alert("入力に不備があります");
+    let theme_form = document.editTheme;
+    if(theme_form.checkValidity() === false){
+        theme_form.classList.add("was-validated");
         return;
     }
 
@@ -72,8 +73,9 @@ function show_add_node(d) {
 
 function send_add_node(d) {
 
-    if(!document.getElementById("add-node-name").value.trim() || document.getElementById("add-node-type").value === "unselected"){
-        alert("入力に不備があります");
+    let node_form = document.addNode;
+    if(node_form.checkValidity() === false){
+        node_form.classList.add("was-validated");
         return;
     }
 
@@ -243,8 +245,10 @@ function show_edit_node(d) {
 }
 
 function send_edit_node(d) {
-    if(!document.getElementById("edit-node-name").value.trim()){
-        alert("入力に不備があります");
+
+    let node_form = document.editNode;
+    if(node_form.checkValidity() === false){
+        node_form.classList.add("was-validated");
         return;
     }
 
@@ -288,47 +292,11 @@ function edit_node(data) {
 function show_relevant_info(d) {
     modal_obj = d;
 
-    let relevantData = d.data.relevant;
-    if(relevantData.length !== 0) {
-        // if relevantData is not empty
-        let table_relevant_info_details = document.createElement('table');
-        table_relevant_info_details.setAttribute('id','relevant-info-details');
-        table_relevant_info_details.setAttribute('class','table table-sm table-hover table-responsive');
-
-
-        for(let i in relevantData) {
-            if(relevantData.hasOwnProperty(i)){
-                let relevantData_url = relevantData[i].url;
-                let relevantData_title = relevantData[i].title;
-
-                let tr = document.createElement('tr');
-                let td = document.createElement('td');
-                td.setAttribute("data-relevant_info_index", i);
-                if(relevantData_url.match(/^https?:\/\//)){
-                    td.setAttribute("ondblclick","window.open().location.href='"+ relevantData_url + "'");
-                }
-                td.innerText = relevantData_title;
-                tr.append(td);
-                table_relevant_info_details.append(tr);
-            }
-        }
-
-        let div_relevant_info_buttons = document.getElementById("relevant-info-details-buttons");
-        div_relevant_info_buttons.parentNode.insertBefore(table_relevant_info_details, div_relevant_info_buttons);
-        $("#relevant-info-details tr").click(function(){
-            tr_default("#relevant-info-details");
-            tr_click($(this));
-        });
-    }else {
-        // if relevantData is empty
-        let p_relevant_info_details = document.createElement('p');
-        p_relevant_info_details.setAttribute('id','relevant-info-details');
-        p_relevant_info_details.setAttribute('class','text-justify');
-        p_relevant_info_details.innerText = "登録されている関連情報はありません";
-
-        let div_relevant_info_buttons = document.getElementById("relevant-info-details-buttons");
-        div_relevant_info_buttons.parentNode.insertBefore(p_relevant_info_details, div_relevant_info_buttons);
-    }
+    // let relevantData = d.data.relevant;
+    relevantInfoVueobj.relevantData = d.data.relevant;
+    relevantInfoVueobj.Buttons_enabled = true;
+    $("#relevant-info-details-form td").css("background-color","#ffffff");
+    relevantInfoVueobj.$forceUpdate();
 
 
     let query = d.data.name;
@@ -348,54 +316,19 @@ function show_relevant_info(d) {
         url: "/relevant_info_search/?q=" + query
     }).done(function(d){
         // if data sending is successful
-        if(d.query.length !== 0){
-            let table_relevant_info_searches = document.createElement('table');
-            table_relevant_info_searches.setAttribute('id','relevant-info-searches');
-            table_relevant_info_searches.setAttribute('class','table table-sm table-responsive');
-            let query_list = d.query;
+        searchVueobj.query_list = d.query;
+        searchVueobj.checkedQuery = [];
+        searchVueobj.$forceUpdate();
 
-            for(let i in query_list) {
-                if(query_list.hasOwnProperty(i)){
-                    let tr = document.createElement('tr');
-
-                    let td_input = document.createElement('td');
-                    let queryCheckbox = document.createElement('input');
-                    queryCheckbox.setAttribute("name", "searchQuery");
-                    queryCheckbox.setAttribute("type", "checkbox");
-                    queryCheckbox.setAttribute("value", query_list[i]);
-                    td_input.append(queryCheckbox);
-
-                    let td_text = document.createElement('td');
-                    td_text.innerText = query_list[i];
-
-                    tr.append(td_input);
-                    tr.append(td_text);
-
-                    table_relevant_info_searches.append(tr);
-                }
-            }
-
-            document.getElementById("relevant-info-searches-form")
-                .insertBefore(table_relevant_info_searches,
-                    document.getElementById("relevant-info-searches-buttons"));
-
-            document.getElementById("relevant-info-searches-button").setAttribute('data-theme-id', theme_id);
-            document.getElementById("relevant-info-searches-button").setAttribute('data-theme-name', theme_obj["name"]);
-            document.getElementById("relevant-info-searches-button").setAttribute('data-node-name', modal_obj.data.name);
-            document.getElementById("relevant-info-searches-button").setAttribute('data-node-id', modal_obj.data.id);
-
-        }else{
-            let p_relevant_info_searches = document.createElement('p');
-            p_relevant_info_searches.setAttribute('id','relevant-info-searches');
-            p_relevant_info_searches.setAttribute('class','text-justify');
-            p_relevant_info_searches.innerText = "推薦される検索キーワードはありません";
-            document.getElementById("relevant-info-searches-form").appendChild(p_relevant_info_searches);
-
-            document.getElementById("relevant-info-searches-buttons").style.display="none";
-        }
+        /*
+        document.getElementById("relevant-info-searches-button").setAttribute('data-theme-id', theme_id);
+        document.getElementById("relevant-info-searches-button").setAttribute('data-theme-name', theme_obj["name"]);
+        document.getElementById("relevant-info-searches-button").setAttribute('data-node-name', modal_obj.data.name);
+        document.getElementById("relevant-info-searches-button").setAttribute('data-node-id', modal_obj.data.id);
+        */
     }).fail(function(){
         // if data sending is failed
-        alert("推薦キーワードを取得することができませんでした");
+        alert("サーバーから推薦キーワードを取得することができませんでした");
     });
 
     $('#relevant-info').modal();
@@ -416,6 +349,7 @@ function show_relevant_info(d) {
             bottom: 5 + "px"
         });
 }
+
 
 function show_add_relevant_info(d) {
     $('#relevant-info').modal('hide');
@@ -439,8 +373,9 @@ function show_add_relevant_info(d) {
 
 function send_add_relevant_info(d) {
 
-    if(!document.getElementById("add-relevant-info-title").value.trim() || !document.getElementById("add-relevant-info-url").value.trim()){
-        alert("入力に不備があります");
+    let relevant_info_form = document.addRelevantInfo;
+    if(relevant_info_form.checkValidity() === false){
+        relevant_info_form.classList.add("was-validated");
         return;
     }
 
@@ -480,10 +415,8 @@ function add_relevant_info(data){
     target_node.data.relevant.push(relevant_obj);
 }
 
-function show_delete_relevant_info(index,d){
-    let relevantData = d.data.relevant;
-
-    $("#delete-relevant-info-body").html("関連情報 : <span style=\"color:red\">" + relevantData[index].title + "</span>&nbspを削除しますか？");
+function show_delete_relevant_info(relevant_info_obj){
+    $("#delete-relevant-info-body").html("関連情報 : <span style=\"color:red\">" + relevant_info_obj.title + "</span>&nbspを削除しますか？");
 
     $('#relevant-info').modal('hide');
     $('#delete-relevant-info').modal();
@@ -504,12 +437,10 @@ function show_delete_relevant_info(index,d){
         });
 }
 
-function send_delete_relevant_info(index, d) {
-    let relevantData = d.data.relevant;
-
+function send_delete_relevant_info(relevant_info_obj, d) {
     let json_data = {
         'node_id' : d.data.id,
-        'relevant_id' : relevantData[index].id
+        'relevant_id' : relevant_info_obj.id
     };
     let delete_data = data_formatting("work","relevant_info","delete",json_data);
     connection.send(JSON.stringify(delete_data));
@@ -543,11 +474,9 @@ function delete_relevant_info(data) {
 
     relevantData_list.splice(delete_index, 1);
 }
-function show_edit_relevant_info(index, d) {
-    let relevantData = d.data.relevant;
-
-    document.getElementById("edit-relevant-info-title").value = relevantData[index].title;
-    document.getElementById("edit-relevant-info-url").value = relevantData[index].url;
+function show_edit_relevant_info(relevant_info_obj) {
+    document.getElementById("edit-relevant-info-title").value = relevant_info_obj.title;
+    document.getElementById("edit-relevant-info-url").value = relevant_info_obj.url;
 
     $('#relevant-info').modal('hide');
     $('#edit-relevant-info').modal();
@@ -568,19 +497,20 @@ function show_edit_relevant_info(index, d) {
         });
 }
 
-function send_edit_relevant_info(index, d) {
-    let relevant = d.data.relevant[index];
-    let relevant_url = document.getElementById("edit-relevant-info-url").value;
-    let relevant_title = document.getElementById("edit-relevant-info-title").value;
+function send_edit_relevant_info(relevant_info_obj, d) {
 
-    if(!relevant_title.trim() || !relevant_url.trim()){
-        alert("入力に不備があります");
+    let relevant_info_form = document.editRelevantInfo;
+    if(relevant_info_form.checkValidity() === false){
+        relevant_info_form.classList.add("was-validated");
         return;
     }
 
+    let relevant_url = document.getElementById("edit-relevant-info-url").value;
+    let relevant_title = document.getElementById("edit-relevant-info-title").value;
+
     let json_data = {
         'node_id' : d.id,
-        'relevant_id' : relevant.id,
+        'relevant_id' : relevant_info_obj.id,
         'relevant_url' : relevant_url,
         'relevant_title': relevant_title
     };
@@ -615,26 +545,5 @@ function edit_relevant_info(data) {
     }
 }
 
-function search_info() {
-    let flag = false;
 
-    let searchQuery = "";
-    for(let query of document.getElementsByName("searchQuery")) {
-        if(query.checked){
-            flag = true;
-            searchQuery = searchQuery + "+" + query.value;
-        }
-    }
-
-    if (!flag) {
-        // 何も選択されていない場合の処理
-        alert("項目が選択されていません。");
-    }else{
-        window.open(
-            "https://www.google.co.jp/search?q=" + searchQuery,
-            '_blank',
-            'menubar=no,toolbar=yes,resizable=yes,width=700,height=500,top=100,left=100'
-        );
-    }
-}
 /* end relevant_info */

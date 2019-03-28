@@ -14,6 +14,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js" integrity="sha256-ufGElb3TnOtzl5E4c/qQnZFGP+FYEZj5kbSEdJNrw0A=" crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="{% static "js/create_ibis/operator.js" %}"></script>
     <script type="text/javascript" src="{% static "js/create_ibis/ibis_visualize.js"%}"></script>
     <script type="text/javascript" src="{% static "js/create_ibis/init.js"%}"></script>
@@ -55,14 +58,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="editTheme" novalidate>
                     <div class="form-group">
                         <label for="edit-theme-name" class="col-form-label">テーマ名 <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="edit-theme-name">
+                        <input type="text" class="form-control" id="edit-theme-name" placeholder="テーマ名" required>
+                        <div class="invalid-feedback">
+                            テーマ名を入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="edit-theme-description" class="col-form-label">テーマの説明 <span style="color: red">(必須)</span></label>
-                        <textarea class="form-control" id="edit-theme-description"></textarea>
+                        <textarea class="form-control" id="edit-theme-description" placeholder="テーマの説明" required></textarea>
+                        <div class="invalid-feedback">
+                            テーマの説明に関して入力してください
+                        </div>
                     </div>
                 </form>
             </div>
@@ -84,15 +93,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="addNode" novalidate>
                     <div class="form-group">
                         <label for="add-node-name" class="col-form-label">ノード名 <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="add-node-name">
+                        <input type="text" class="form-control" id="add-node-name" placeholder="ノード名" required>
+                        <div class="invalid-feedback">
+                            ノード名を入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="add-node-type" class="col-form-label">ノードタイプ <span style="color: red">(必須)</span></label>
-                        <select class="custom-select" id="add-node-type">
-                            <option value="unselected" selected>選択してください</option>
+                        <select class="custom-select" id="add-node-type" required>
+                            <option value="" selected>選択してください</option>
                             <option value="Issue">課題</option>
                             <option value="Idea">アイデア</option>
                             <option value="Merit">メリット</option>
@@ -101,10 +113,13 @@
                             <option value="Reason">理由</option>
                             <option value="Opinion">意見</option>
                         </select>
+                        <div class="invalid-feedback">
+                            ノードタイプを選択してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="add-node-description" class="col-form-label">ノードの詳細</label>
-                        <textarea class="form-control" id="add-node-description"></textarea>
+                        <textarea class="form-control" id="add-node-description" placeholder="ノードの詳細"></textarea>
                     </div>
                 </form>
             </div>
@@ -144,14 +159,17 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit_modal_body_form">
+                <form name="editNode" novalidate>
                     <div class="form-group">
                         <label for="edit-node-name" class="col-form-label">ノード名 <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="edit-node-name">
+                        <input type="text" class="form-control" id="edit-node-name" placeholder="ノード名" required>
+                        <div class="invalid-feedback">
+                            ノード名を入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="edit-node-type" class="col-form-label">ノードタイプ</label>
-                        <select class="custom-select" id="edit-node-type">
+                        <select class="custom-select" id="edit-node-type" required>
                             <option value="Issue">課題</option>
                             <option value="Idea">アイデア</option>
                             <option value="Merit">メリット</option>
@@ -163,7 +181,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edit-node-description" class="col-form-label">ノードの詳細</label>
-                        <textarea class="form-control" id="edit-node-description"></textarea>
+                        <textarea class="form-control" id="edit-node-description" placeholder="ノードの詳細"></textarea>
                     </div>
                 </form>
             </div>
@@ -188,17 +206,29 @@
                 <form>
                     <div class="form-group" id="relevant-info-details-form">
                         <label for="relevant-info-details" class="col-form-label">関連情報の編集 (ダブルクリックでリンク先に移動できます)</label>
+
+                        <table v-if="relevantData.length !== 0" id="relevant-info-details" class="table table-sm table-hover table-responsive">
+                            <tr v-for="relevantDatum in relevantData"><td v-on:click="select_relevantInfo(relevantDatum, $event)" v-on:dblclick="dbclick_href(relevantDatum.url)">${ relevantDatum.title }</td></tr>
+                        </table>
+                        <p v-else id="relevant-info-details" class="text-justify">登録されている関連情報はありません</p>
+
                         <div id="relevant-info-details-buttons">
                             <button type="button" class="btn btn-primary" onclick="show_add_relevant_info(modal_obj)">追加</button>
-                            <button type="button" class="btn btn-danger" onclick="show_delete_relevant_info(relevant_info_index, modal_obj)" disabled>削除</button>
-                            <button type="button" class="btn btn-success" onclick="show_edit_relevant_info(relevant_info_index, modal_obj)" disabled>編集</button>
+                            <button type="button" class="btn btn-danger" onclick="show_delete_relevant_info(relevant_info_obj)" v-bind:disabled="Buttons_enabled">削除</button>
+                            <button type="button" class="btn btn-success" onclick="show_edit_relevant_info(relevant_info_obj)" v-bind:disabled="Buttons_enabled">編集</button>
                         </div>
                     </div>
                     <hr>
                     <div class="form-group" id="relevant-info-searches-form">
                         <label for="relevant-info-searches" class="col-form-label">以下の単語でGoogle検索をしてみますか？</label>
-                        <div id="relevant-info-searches-buttons">
-                            <button id="relevant-info-searches-button" type="button" class="btn btn-success" onclick="search_info()">検索</button>
+
+                        <table v-if="query_list.length !== 0" id="relevant-info-searches" class="table table-sm table-responsive">
+                            <tr v-for="query in query_list"><td><input name="searchQuery" type="checkbox" v-bind:value="query" v-model="checkedQuery"></td><td>${ query }</td></tr>
+                        </table>
+                        <p v-else id="relevant-info-searches" class="text-justify">推薦される検索キーワードはありません</p>
+
+                        <div v-if="query_list.length !== 0" id="relevant-info-searches-buttons">
+                            <button id="relevant-info-searches-button" type="button" class="btn btn-success" v-on:click="search_info(checkedQuery)" v-bind:disabled="checkedQuery.length === 0 ? true : false">検索</button>
                         </div>
                     </div>
                 </form>
@@ -217,14 +247,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="addRelevantInfo" data-toggle="validator" novalidate>
                     <div class="form-group">
                         <label for="add-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="add-relevant-info-title">
+                        <input type="text" class="form-control" id="add-relevant-info-title" placeholder="タイトル" required>
+                        <div class="invalid-feedback">
+                            タイトルを入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="add-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="add-relevant-info-url">
+                        <input type="url" pattern="^https?://.+" class="form-control" id="add-relevant-info-url" placeholder="URL" required>
+                        <div class="invalid-feedback">
+                            有効なURLを入力してください
+                        </div>
                     </div>
                 </form>
             </div>
@@ -249,7 +285,7 @@
             <div class="modal-body" id="delete-relevant-info-body"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="send_delete_relevant_info(relevant_info_index, modal_obj)">削除</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="send_delete_relevant_info(relevant_info_obj, modal_obj)">削除</button>
             </div>
         </div>
     </div>
@@ -265,21 +301,27 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form name="editRelevantInfo" data-toggle="validator" novalidate>
                     <div class="form-group">
                         <label for="edit-relevant-info-title" class="col-form-label">タイトル <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="edit-relevant-info-title">
+                        <input type="text" class="form-control" id="edit-relevant-info-title" placeholder="タイトル" required>
+                        <div class="invalid-feedback">
+                            タイトルを入力してください
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="edit-relevant-info-url" class="col-form-label">URL <span style="color: red">(必須)</span></label>
-                        <input type="text" class="form-control" id="edit-relevant-info-url">
+                        <input type="url" pattern="^https?://.+" class="form-control" id="edit-relevant-info-url" placeholder="URL" required>
+                        <div class="invalid-feedback">
+                            有効なURLを入力してください
+                        </div>
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
-                <button type="button" class="btn btn-success" onclick="send_edit_relevant_info(relevant_info_index, modal_obj)">編集</button>
+                <button type="button" class="btn btn-success" onclick="send_edit_relevant_info(relevant_info_obj, modal_obj)">編集</button>
             </div>
         </div>
     </div>

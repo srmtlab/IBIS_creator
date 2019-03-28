@@ -7,11 +7,13 @@ https://stackoverflow.com/questions/32327489/error-invalid-value-for-g-attribute
 as a reference
 */
 
-let g, root, modal_obj, theme_obj, relevant_info_index;
+let g, root, modal_obj, theme_obj = null, relevant_info_obj;
 let ibis_width, ibis_height, navvar_height;
 let scale = 1, current_gx, current_gy, translate_x = 0, translate_y = 0;
 let init_flag = true;
 let connection = null;
+let relevantInfoVueobj, searchVueobj;
+
 
 function resize_ibis() {
     navvar_height = document.getElementById("navvar").offsetHeight + 10;
@@ -55,6 +57,7 @@ function init_data(websocket_url) {
         if(init_flag && status === "init"){
             theme_obj = receive_data["theme"];
 
+
             let ibisData = receive_data['node'];
 
             //Constructs a root node from the hierarchical data "ibisData"
@@ -71,6 +74,50 @@ function init_data(websocket_url) {
                 .on("dblclick.zoom", null);
 
             update(root);
+
+            relevantInfoVueobj = new Vue({
+                el: '#relevant-info-details-form',
+                delimiters: ['${', '}'],
+                data: {
+                    relevantData : {},
+                    Buttons_enabled : true
+                },
+                methods:{
+                    dbclick_href : function (url) {
+                        window.open().location.href=url;
+                    },
+                    select_relevantInfo : function (datum, event) {
+                        this.Buttons_enabled = false;
+                        $("#relevant-info-details-form td").css("background-color","#ffffff");
+                        $(event.target).css("background-color","#bce2e8");
+                        relevant_info_obj = datum;
+                    }
+                }
+            });
+
+            searchVueobj = new Vue({
+            el: '#relevant-info-searches-form',
+            delimiters: ['${', '}'],
+            data: {
+                query_list : {},
+                checkedQuery : [],
+            },
+            methods:{
+                search_info : function (query_list) {
+                    let searchQuery = "";
+                    for(let i in query_list) {
+                        if(query_list.hasOwnProperty(i)){
+                            searchQuery = searchQuery + "+" + query_list[i];
+                        }
+                    }
+                    window.open(
+                        "https://www.google.co.jp/search?q=" + searchQuery,
+                        '_blank',
+                        'menubar=no,toolbar=yes,resizable=yes,width=700,height=500,top=100,left=100'
+                    );
+                }
+            }
+        });
         }else if (status === "work"){
 
             let type = receive_data["type"];
@@ -123,17 +170,6 @@ function init_data(websocket_url) {
 
 }
 
-function tr_default(tblID){
-    let vTR = tblID + " tr";
-    $(vTR).css("background-color","#ffffff");
-}
-
-function tr_click(trID){
-    trID.css("background-color","#bce2e8");
-    $("#relevant-info-details-buttons button").prop("disabled", false);
-    relevant_info_index = Number(trID.children('td').attr('data-relevant_info_index'));
-}
-
 window.addEventListener("resize", resize_ibis);
 
 window.onload = function () {
@@ -143,23 +179,19 @@ window.onload = function () {
 
     init_data(websocket_url);
 
+    $("#edit-theme").on('hidden.bs.modal', function () {
+        document.editTheme.classList.remove("was-validated");
+    });
 
     $("#add-node").on('hidden.bs.modal', function () {
         document.getElementById("add-node-name").value = "";
-        document.getElementById("add-node-type").value = "unselected";
+        document.getElementById("add-node-type").value = "";
         document.getElementById("add-node-description").value = "";
+        document.addNode.classList.remove("was-validated");
     });
 
-    $("#relevant-info").on('hidden.bs.modal', function () {
-        let relevant_info_details = document.getElementById("relevant-info-details");
-        let relevant_info_searches = document.getElementById("relevant-info-searches");
-
-        relevant_info_details.parentNode.removeChild(relevant_info_details);
-        relevant_info_searches.parentNode.removeChild(relevant_info_searches);
-
-        document.getElementById("relevant-info-searches-buttons").style.display="block";
-        $("#relevant-info-details-buttons > .btn-danger").prop("disabled", true);
-        $("#relevant-info-details-buttons > .btn-success").prop("disabled", true);
+    $("#edit-node").on('hidden.bs.modal', function () {
+        document.editNode.classList.remove("was-validated");
     });
 
     $("#delete-relevant-info").on('hidden.bs.modal', function () {
@@ -169,10 +201,12 @@ window.onload = function () {
     $("#add-relevant-info").on('hidden.bs.modal', function () {
         document.getElementById("add-relevant-info-url").value = "";
         document.getElementById("add-relevant-info-title").value = "";
+        document.addRelevantInfo.classList.remove("was-validated");
         show_relevant_info(modal_obj);
     });
 
     $("#edit-relevant-info").on('hidden.bs.modal', function () {
+        document.editRelevantInfo.classList.remove("was-validated");
         show_relevant_info(modal_obj);
     });
 };
