@@ -21,14 +21,14 @@ Under Construction
 If you deploy this app, please read the [`How to deploy the IBIS CREATOR`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy).  
 If you develop this app and set up development environment, please read the [`How to set up the development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Develop)
 
-# Authors
+## Authors
 - Akira Kamiya
 - Shota Naito
 
-# Licence
+## Licence
 - The MIT Licence (MIT)
 
-# References
+## References
 - [IBIS CREATOR](http://lod.srmt.nitech.ac.jp/IBIS_creator/)
 - [IBIS CREATOR (Knowledge Connector)](http://idea.linkdata.org/idea/idea1s2697i)
 - [議題の関連情報推薦によるIBIS構造作成支援システムの試作 ( 東海支部連合大会2018 )](https://www.jp-c.jp/rengo/www/cd/pdf/M3-4.pdf)
