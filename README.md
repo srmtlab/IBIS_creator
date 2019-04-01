@@ -14,7 +14,7 @@ Under Construction
 - Python 3.6
     - Django 2.x
 - Redis
-- Virtuoso (Optional)
+- [Virtuoso](https://virtuoso.openlinksw.com/rdf/) (Optional)
 
 
 ## Setup
