@@ -7,7 +7,7 @@ This app won the prize in [LOD challenge 2018](https://2018.lodc.jp/)
 IBIS CREATOR is the Web application to make the IBIS ( Issue-based information system ) structure which is an argumentation-based approach to clarifying problems that involve multiple stakeholders.
 
 ## Online demo
-Under Construction
+[IBIS CREATOR](ibiscreator.srmt.nitech.ac.jp)
 
 ## Requirement
 - [MeCab](http://taku910.github.io/mecab/)
@@ -29,7 +29,6 @@ If you develop this app and set up development environment, please read the [`Ho
 - The MIT Licence (MIT)
 
 ## References
-- [IBIS CREATOR](http://lod.srmt.nitech.ac.jp/IBIS_creator/)
 - [IBIS CREATOR (Knowledge Connector)](http://idea.linkdata.org/idea/idea1s2697i)
 - [議題の関連情報推薦によるIBIS構造作成支援システムの試作 ( 東海支部連合大会2018 )](https://www.jp-c.jp/rengo/www/cd/pdf/M3-4.pdf)
 - [Two Scoops of Django 1.11: Best Practices for the Django Web Framework (English Edition)](https://www.amazon.co.jp/dp/B076D5FKFX/)
