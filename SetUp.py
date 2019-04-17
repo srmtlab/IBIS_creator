@@ -34,8 +34,8 @@ with open('./'+FILENAME, 'w') as fw:
         "VIRTUOSO_USER": jsonData.get('VIRTUOSO_USER', ""),
         "VIRTUOSO_PASSWORD": jsonData.get('VIRTUOSO_PASSWORD', ""),
         "VIRTUOSO_UPDATE_ENDPOINT": jsonData.get('VIRTUOSO_UPDATE_ENDPOINT', ""),
-        "ONTOLOGY": "http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#",
-        "REDIS_HOST": "localhost",
-        "REDIS_PORT": 6379,
+        "ONTOLOGY": jsonData.get('ONTOLOGY', "http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#"),
+        "REDIS_HOST": jsonData.get('REDIS_HOST', "localhost"),
+        "REDIS_PORT": jsonData.get('REDIS_PORT', 6379),
     }
     json.dump(local_settings, fw, indent=2)
