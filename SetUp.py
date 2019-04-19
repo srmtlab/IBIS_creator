@@ -6,6 +6,9 @@ from django.core.management.utils import get_random_secret_key
 FILENAME = 'local_settings.json'
 SECRET_FILES_DIR_NAME = 'SECRET_FILES'
 FILEPATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), SECRET_FILES_DIR_NAME, FILENAME)
+
+STATIC_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/')
+
 jsonData = {}
 
 def generate_secret_key(SECRET_KEY):
@@ -29,7 +32,7 @@ with open(FILEPATH, 'w') as fw:
         "FILENAME": FILENAME,
         "SECRET_KEY": generate_secret_key(jsonData.get('SECRET_KEY', "")),
         "ALLOWED_HOSTS": jsonData.get("ALLOWED_HOSTS", [""]),
-        "STATIC_ROOT": jsonData.get('STATIC_ROOT', ""),
+        "STATIC_ROOT": jsonData.get('STATIC_ROOT', STATIC_ROOT),
         "LOD": jsonData.get('LOD', False),
         "LOD_RESOURCE": jsonData.get('LOD_RESOURCE', ""),
         "LOD_GRAPH_URI": jsonData.get('LOD_GRAPH_URI', ""),
