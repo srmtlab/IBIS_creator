@@ -23,7 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 from django.core.exceptions import ImproperlyConfigured
 
-with open('local_settings.json') as f:
+LOCAL_SETTINGS_FILE = os.path.join(BASE_DIR, 'SECRET_FILES/local_settings.json')
+with open(LOCAL_SETTINGS_FILE) as f:
     local_settings = json.loads(f.read())
 
 
