@@ -18,7 +18,7 @@ def generate_secret_key(SECRET_KEY):
         return SECRET_KEY
     
 if os.path.exists(FILEPATH):
-    with open('./'+FILENAME, 'r') as fw:
+    with open(FILEPATH, 'r') as fw:
         try:
             jsonData = json.load(fw)
         except json.JSONDecodeError as e:
