@@ -4,6 +4,8 @@ import sys
 from django.core.management.utils import get_random_secret_key
 
 FILENAME = 'local_settings.json'
+SECRET_FILES_DIR_NAME = 'SECRET_FILES'
+FILEPATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), SECRET_FILES_DIR_NAME, FILENAME)
 jsonData = {}
 
 def generate_secret_key(SECRET_KEY):
@@ -12,7 +14,7 @@ def generate_secret_key(SECRET_KEY):
     else:
         return SECRET_KEY
     
-if os.path.exists(FILENAME):
+if os.path.exists(FILEPATH):
     with open('./'+FILENAME, 'r') as fw:
         try:
             jsonData = json.load(fw)
@@ -22,7 +24,7 @@ if os.path.exists(FILENAME):
             print(e)
             sys.exit(1)
             
-with open('./'+FILENAME, 'w') as fw:
+with open(FILEPATH, 'w') as fw:
     local_settings = {
         "FILENAME": FILENAME,
         "SECRET_KEY": generate_secret_key(jsonData.get('SECRET_KEY', "")),
