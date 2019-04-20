@@ -31,7 +31,7 @@ with open(FILEPATH, 'w') as fw:
     local_settings = {
         "FILENAME": FILENAME,
         "SECRET_KEY": generate_secret_key(jsonData.get('SECRET_KEY', "")),
-        "ALLOWED_HOSTS": jsonData.get("ALLOWED_HOSTS", ["0.0.0.0"]),
+        "ALLOWED_HOSTS": jsonData.get("ALLOWED_HOSTS", [""]),
         "STATIC_ROOT": jsonData.get('STATIC_ROOT', "/opt/IBIS_creator/static/"),
         "LOD": jsonData.get('LOD', False),
         "LOD_RESOURCE": jsonData.get('LOD_RESOURCE', ""),
