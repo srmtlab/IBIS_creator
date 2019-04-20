@@ -7,7 +7,7 @@ FILENAME = 'local_settings.json'
 SECRET_FILES_DIR_NAME = 'SECRET_FILES'
 FILEPATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), SECRET_FILES_DIR_NAME, FILENAME)
 
-STATIC_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/')
+# STATIC_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/')
 
 jsonData = {}
 
@@ -31,8 +31,8 @@ with open(FILEPATH, 'w') as fw:
     local_settings = {
         "FILENAME": FILENAME,
         "SECRET_KEY": generate_secret_key(jsonData.get('SECRET_KEY', "")),
-        "ALLOWED_HOSTS": jsonData.get("ALLOWED_HOSTS", [""]),
-        "STATIC_ROOT": jsonData.get('STATIC_ROOT', STATIC_ROOT),
+        "ALLOWED_HOSTS": jsonData.get("ALLOWED_HOSTS", ["0.0.0.0"]),
+        "STATIC_ROOT": jsonData.get('STATIC_ROOT', "/opt/IBIS_creator/static/"),
         "LOD": jsonData.get('LOD', False),
         "LOD_RESOURCE": jsonData.get('LOD_RESOURCE', ""),
         "LOD_GRAPH_URI": jsonData.get('LOD_GRAPH_URI', ""),
@@ -40,7 +40,7 @@ with open(FILEPATH, 'w') as fw:
         "VIRTUOSO_PASSWORD": jsonData.get('VIRTUOSO_PASSWORD', ""),
         "VIRTUOSO_UPDATE_ENDPOINT": jsonData.get('VIRTUOSO_UPDATE_ENDPOINT', ""),
         "ONTOLOGY": jsonData.get('ONTOLOGY', "http://lod.srmt.nitech.ac.jp/IBIS_creator/ontology#"),
-        "REDIS_HOST": jsonData.get('REDIS_HOST', "localhost"),
+        "REDIS_HOST": jsonData.get('REDIS_HOST', "redis"),
         "REDIS_PORT": jsonData.get('REDIS_PORT', 6379),
     }
     json.dump(local_settings, fw, indent=2)
