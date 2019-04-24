@@ -25,7 +25,7 @@ See also [srmtlab/IBIS_creator-docker_compose](https://github.com/srmtlab/IBIS_c
 See also [`How to deploy the IBIS CREATOR`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy).  
 
 
-## To develop IBIS CREATOR
+## To develop the IBIS CREATOR
 See also the [`How to set up the development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Develop)
 
 ## Authors
