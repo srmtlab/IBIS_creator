@@ -16,8 +16,12 @@ IBIS CREATOR is the Web application to make the IBIS ( Issue-based information s
 - Redis
 - [Virtuoso](https://virtuoso.openlinksw.com/rdf/) (Optional)
 
+## Quick Start for Production
+### Using docker-compose
+See also [srmtlab/IBIS_creator-docker_compose](https://github.com/srmtlab/IBIS_creator-docker_compose)
 
-## Setup
+
+### On-premise
 If you deploy this app, please read the [`How to deploy the IBIS CREATOR`](https://github.com/srmtlab/IBIS_creator/wiki/Deploy).  
 If you develop this app and set up development environment, please read the [`How to set up the development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Develop)
 
