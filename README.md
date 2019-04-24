@@ -14,6 +14,8 @@ IBIS CREATOR is the Web application to make the IBIS ( Issue-based information s
 - Python 3.6
     - Django 2.x
 - Redis
+- Web server (Nginx, apache, ...)
+    - to serve static content and proxy
 - [Virtuoso](https://virtuoso.openlinksw.com/rdf/) (Optional)
 
 ## Quick Start for Production
