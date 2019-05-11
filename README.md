@@ -31,7 +31,7 @@ See also [`How to deploy the IBIS CREATOR`](https://github.com/srmtlab/IBIS_crea
 See also the [`How to set up the development environment`](https://github.com/srmtlab/IBIS_creator/wiki/Develop)
 
 ## Authors
-- Akira Kamiya
+- [Akira Kamiya (Github)](https://github.com/akamiya208)
 - Shota Naito
 
 ## Licence
@@ -40,6 +40,5 @@ See also the [`How to set up the development environment`](https://github.com/sr
 ## References
 - [IBIS CREATOR (Knowledge Connector)](http://idea.linkdata.org/idea/idea1s2697i)
 - [議題の関連情報推薦によるIBIS構造作成支援システムの試作 ( 東海支部連合大会2018 )](https://www.jp-c.jp/rengo/www/cd/pdf/M3-4.pdf)
-- [Two Scoops of Django 1.11: Best Practices for the Django Web Framework (English Edition)](https://www.amazon.co.jp/dp/B076D5FKFX/)
 - [Issue-based information system (wikipedia)](https://en.wikipedia.org/wiki/Issue-based_information_system)
 - [Linked Open Data (wikipedia)](https://ja.wikipedia.org/wiki/Linked_Open_Data)
